@@ -10,8 +10,17 @@ import {
   deleteUrl,
   patchUrl
 } from "./api/http"
+import Vant from 'vant';
+import 'vant/lib/index.css';
+import Header from './common/Header.vue'
 
 Vue.config.productionTip = false
+
+// 导入所有 vant 组件
+Vue.use(Vant);
+
+// 注册全局组件
+Vue.component("Header", Header)
 
 // 定义全局变量
 Vue.prototype.$post = post
