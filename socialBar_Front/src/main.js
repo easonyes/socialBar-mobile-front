@@ -10,6 +10,7 @@ import {
   deleteUrl,
   patchUrl
 } from "./api/http"
+import validate from "../src/commonJs/validate.js"
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import Header from './common/Header.vue'
@@ -28,6 +29,7 @@ Vue.prototype.$axios = axios
 Vue.prototype.$get = get
 Vue.prototype.$delete = deleteUrl
 Vue.prototype.$patch = patchUrl
+Vue.prototype.$validate = validate
 
 /* eslint-disable no-new */
 new Vue({

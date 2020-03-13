@@ -1,12 +1,12 @@
 <template>
   <div>
-    <Header title="登录" rIcon="search" />
+    <Header title="登录" rText="验证码登录" />
     <img src="../assets/logo.png">
     <div class="loginBox">
         <van-field
-            v-model="name"
+            v-model="email"
             :left-icon="nameIcon"
-            placeholder="请输入用户名"
+            placeholder="请输入邮箱"
         />
         <van-field
             style="margin-top: 20px;"
@@ -17,7 +17,7 @@
         <van-button class="loginBtn" @click="login" type="primary">登&nbsp;&nbsp;录</van-button>
     </div>
     <div class="textBtns">
-        <div class="textBtn" @click="toRegister">忘记密码？</div>
+        <div class="textBtn" @click="toSetPwd">忘记密码？</div>
         <div class="textBtn" @click="toRegister">新用户注册</div>
     </div>
   </div>
@@ -28,7 +28,7 @@ import icon from '../assets/img/icon-demo-1126.png'
 export default {
     data() {
         return {
-            name: '',
+            email: '',
             password: '',
             nameIcon: icon
         }
@@ -36,7 +36,7 @@ export default {
     methods: {
         login() {
             this.$post('/login', {
-                name: this.name,
+                email: this.email,
                 password: this.password
             }).then(res => {
                 console.log(res)
@@ -44,6 +44,14 @@ export default {
         },
         toRegister() {
             this.$router.push('/register')
+        },
+        toSetPwd() {
+            this.$router.push({
+                name: "setPwd",
+                params: {
+                    type: 1
+                }
+            })
         }
     }
 }
@@ -51,8 +59,8 @@ export default {
 
 <style lang="less" scoped>
 .loginBox {
-    width: 80%;
-    margin-left: 10%;
+    width: 90%;
+    margin-left: 5%;
     .loginBtn {
         margin-top: 20px;
         width: 100%;

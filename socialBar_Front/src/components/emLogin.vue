@@ -1,6 +1,6 @@
 <template>
   <div>
-        <Header title="注册"/>
+        <Header title="登录" rText="密码登录" />
         <img src="../assets/logo.png">
         <div class="loginBox">
             <van-field
@@ -24,16 +24,16 @@
                     required
                     type="digit"
                 />
-                <van-button class="codeBtn" @click="getCode" v-if="!clicked" type="primary">获取验证码</van-button>
+                <van-button class="codeBtn" @click="register" v-if="!clicked" type="primary">获取验证码</van-button>
                 <van-button class="codeBtn" v-if="clicked && !loading" disabled type="primary">{{reSec}}<span class="label">重新获取</span></van-button>
                 <van-button class="codeBtn" loading  v-if="loading" type="primary" loading-text="加载中..." />
             </div>
             <div class="tips"><span style="color: red">*</span>温馨提示：若账号未注册，登录时将会自动注册</div>
-            <van-button class="loginBtn" @click="register" type="primary">注&nbsp;&nbsp;册</van-button>
+            <van-button class="loginBtn" @click="login" type="primary">登&nbsp;&nbsp;录</van-button>
         </div>
-        <div class="textBtns">
+        <!-- <div class="textBtns">
             <div class="textBtn" @click="toLogin">已注册，去登录</div>
-        </div>
+        </div> -->
   </div>
 </template>
 
@@ -53,7 +53,8 @@ export default {
     },
     mounted() {},
     methods: {
-        getCode() {
+        register() {
+            this.code = ""
             if (!this.email) {
                 this.$toast.fail('请输入您的邮箱！');
                 return false
@@ -68,16 +69,12 @@ export default {
                     if (res.success) {
                         clearInterval(this.timer)
                         this.timer = setInterval(() => {
-                            this.reSec-=1
+                            this.reSec--
                             if (this.reSec === 0) {
                                 this.clicked = false
-                                this.reSec = 60
                             }
                         }, 1000)
                         // this.$router.push('/setPwd')
-                    } else {
-                        this.$toast.fail("获取验证码失败，请稍后重试！")
-                        this.clicked = false
                     }
                 })
             } else {
@@ -86,33 +83,14 @@ export default {
             }
             
         },
-        register() {
-            if (!this.email) {
-                this.$toast.fail('请输入您的邮箱！');
-                return false
-            }
-            if (!this.code) {
-                this.$toast.fail("请输入验证码！")
-            }
+        login() {
             this.$post('/emailValidate', {
                 email: this.email,
                 code: this.code,
-                type: "1"
+                type: "3"
             }).then(res => {
-                if (res.success) {
-                    this.$router.push({
-                        name: "setPwd",
-                        params: {
-                            type: 2,
-                            email: this.email,
-                            code: this.code
-                        }
-                    })
-                }
+                console.log(res)
             })
-        },
-        toLogin() {
-            this.$router.push('/login')
         }
     }
 }

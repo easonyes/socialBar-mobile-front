@@ -4,10 +4,11 @@
             :title="title"
             left-text="返回"
             left-arrow
+            :right-text="rText"
             @click-left="onClickLeft"
             @click-right="onClickRight"
         >
-            <van-icon :name="rIcon" slot="right" />
+            <van-icon v-if="rIcon" :name="rIcon" slot="right" />
         </van-nav-bar>
     </div>
 </template>
@@ -22,6 +23,10 @@ export default {
         rIcon: {
             type: String,
             default: ''
+        },
+        rText: {
+            type: String,
+            default: ""
         }
     },
     data() {
@@ -34,7 +39,12 @@ export default {
             this.$router.go(-1)
         },
         onClickRight() {
-            console.log('这里是右上角的按钮')
+            if (this.rText === "验证码登录") {
+                this.$router.push("/emLogin")
+            }
+            if (this.rText === "密码登录") {
+                this.$router.push("/login")
+            }
         }
     }
 }
