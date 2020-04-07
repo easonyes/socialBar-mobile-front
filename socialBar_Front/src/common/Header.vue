@@ -9,6 +9,9 @@
             @click-right="onClickRight"
         >
             <van-icon v-if="rIcon" :name="rIcon" slot="right" />
+            <van-dropdown-menu v-if="options.length > 0"  slot="right" >
+                <van-dropdown-item v-model="rChoose" :options="options"/>
+            </van-dropdown-menu>
         </van-nav-bar>
     </div>
 </template>
@@ -27,11 +30,15 @@ export default {
         rText: {
             type: String,
             default: ""
+        },
+        options: {
+            type: Array,
+            default: () => []
         }
     },
     data() {
         return {
-
+            rChoose: "1"
         }
     },
     methods: {
@@ -52,6 +59,9 @@ export default {
 
 <style lang="less" scoped>
 .header {
-    height: 60px;
+    line-height: 46px;
+}
+/deep/ .van-ellipsis {
+    text-overflow:ellipsis;
 }
 </style>

@@ -3,18 +3,13 @@
         <Header title="注册"/>
         <img src="../assets/logo.png">
         <div class="loginBox">
-            <van-field
+            <CodeBox @emailBlur="emailBlur" @codeBlur="codeBlur" />
+            <!-- <van-field
                 v-model="email"
                 :left-icon="nameIcon"
                 placeholder="请输入您的邮箱"
                 required
             />
-            <!-- <van-field
-                style="margin-top: 20px;"
-                v-model="password"
-                left-icon="idcard"
-                placeholder="请输入密码"
-            /> -->
             <div class="codeBox">
                 <van-field
                     class="condIn"
@@ -27,7 +22,7 @@
                 <van-button class="codeBtn" @click="getCode" v-if="!clicked" type="primary">获取验证码</van-button>
                 <van-button class="codeBtn" v-if="clicked && !loading" disabled type="primary">{{reSec}}<span class="label">重新获取</span></van-button>
                 <van-button class="codeBtn" loading  v-if="loading" type="primary" loading-text="加载中..." />
-            </div>
+            </div> -->
             <div class="tips"><span style="color: red">*</span>温馨提示：若账号未注册，登录时将会自动注册</div>
             <van-button class="loginBtn" @click="register" type="primary">注&nbsp;&nbsp;册</van-button>
         </div>
@@ -38,21 +33,23 @@
 </template>
 
 <script>
-import icon from '../assets/img/icon-demo-1126.png'
 export default {
     data() {
         return {
-            email: "942471654@qq.com",
+            email: "",
             code: "",
-            nameIcon: icon,
-            clicked: false,
-            loading: false,
-            reSec: 60,
-            timer: null
         }
     },
     mounted() {},
     methods: {
+        emailBlur(val) {
+            this.email = val
+            // console.log(val)
+        },
+        codeBlur(val) {
+            this.code = val
+            // console.log(val)
+        },
         getCode() {
             if (!this.email) {
                 this.$toast.fail('请输入您的邮箱！');

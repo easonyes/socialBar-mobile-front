@@ -3,31 +3,7 @@
         <Header title="登录" rText="密码登录" />
         <img src="../assets/logo.png">
         <div class="loginBox">
-            <van-field
-                v-model="email"
-                :left-icon="nameIcon"
-                placeholder="请输入您的邮箱"
-                required
-            />
-            <!-- <van-field
-                style="margin-top: 20px;"
-                v-model="password"
-                left-icon="idcard"
-                placeholder="请输入密码"
-            /> -->
-            <div class="codeBox">
-                <van-field
-                    class="condIn"
-                    v-model="code"
-                    :left-icon="nameIcon"
-                    placeholder="请输入验证码"
-                    required
-                    type="digit"
-                />
-                <van-button class="codeBtn" @click="register" v-if="!clicked" type="primary">获取验证码</van-button>
-                <van-button class="codeBtn" v-if="clicked && !loading" disabled type="primary">{{reSec}}<span class="label">重新获取</span></van-button>
-                <van-button class="codeBtn" loading  v-if="loading" type="primary" loading-text="加载中..." />
-            </div>
+            <CodeBox @emailBlur="emailBlur" @codeBlur="codeBlur" />
             <div class="tips"><span style="color: red">*</span>温馨提示：若账号未注册，登录时将会自动注册</div>
             <van-button class="loginBtn" @click="login" type="primary">登&nbsp;&nbsp;录</van-button>
         </div>
@@ -42,7 +18,7 @@ import icon from '../assets/img/icon-demo-1126.png'
 export default {
     data() {
         return {
-            email: "942471654@qq.com",
+            email: "",
             code: "",
             nameIcon: icon,
             clicked: false,
@@ -53,6 +29,14 @@ export default {
     },
     mounted() {},
     methods: {
+        emailBlur(val) {
+            this.email = val
+            // console.log(val)
+        },
+        codeBlur(val) {
+            this.code = val
+            // console.log(val)
+        },
         register() {
             this.code = ""
             if (!this.email) {
@@ -84,12 +68,25 @@ export default {
             
         },
         login() {
+            if (!this.email || !this.code) {
+                this.$toast.fail("请填写完整")
+                return false
+            }
+            if (!this.$validate.emailVali(this.email)) {
+                this.$toast.fail("邮箱格式有误，请重新输入！")
+                return false
+            }
             this.$post('/emailValidate', {
                 email: this.email,
                 code: this.code,
                 type: "3"
             }).then(res => {
-                console.log(res)
+                if(res.success) {
+                    // 跳转主页
+                    this.$router.replace('/')
+                } else {
+                    this.$toast.fail(res.result)
+                }
             })
         }
     }

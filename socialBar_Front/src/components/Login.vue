@@ -33,13 +33,36 @@ export default {
             nameIcon: icon
         }
     },
+    created() {
+        this.$post("/login").then(res => {
+            if (res.success) {
+                this.$router.replace("/")
+            }
+        })
+    },
     methods: {
         login() {
+            if (!this.email || !this.password) {
+                this.$toast.fail('邮箱与密码不能为空！');
+                return false
+            }
+            if (!this.$validate.emailVali(this.email)) {
+                this.$toast.fail('邮箱格式有误！');
+                return false
+            }
+            if (this.password.length < 6) {
+                this.$toast.fail('请填写正确的密码');
+                return false
+            }
             this.$post('/login', {
                 email: this.email,
                 password: this.password
             }).then(res => {
-                console.log(res)
+                if (res.success) {
+                    this.$router.replace("/")
+                } else {
+                    this.$toast.fail(res.result)
+                }
             })
         },
         toRegister() {
