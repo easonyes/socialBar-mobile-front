@@ -34,48 +34,53 @@ export default {
         }
     },
     created() {
-        this.$post("/login").then(res => {
-            if (res.success) {
-                this.$router.replace("/")
-            }
-        })
+      this.$post("/login").then(res => {
+        if (res.success) {
+          let result = JSON.parse(res.studentInfo)[0].fields
+          localStorage.setItem('avatar', result.avatar)
+          localStorage.setItem('id', result.id)
+          localStorage.setItem('name', result.nickname)
+          localStorage.setItem('email', result.email)
+          this.$router.replace("/main")
+        }
+      })
     },
     methods: {
-        login() {
-            if (!this.email || !this.password) {
-                this.$toast.fail('邮箱与密码不能为空！');
-                return false
-            }
-            if (!this.$validate.emailVali(this.email)) {
-                this.$toast.fail('邮箱格式有误！');
-                return false
-            }
-            if (this.password.length < 6) {
-                this.$toast.fail('请填写正确的密码');
-                return false
-            }
-            this.$post('/login', {
-                email: this.email,
-                password: this.password
-            }).then(res => {
-                if (res.success) {
-                    this.$router.replace("/")
-                } else {
-                    this.$toast.fail(res.result)
-                }
-            })
-        },
-        toRegister() {
-            this.$router.push('/register')
-        },
-        toSetPwd() {
-            this.$router.push({
-                name: "setPwd",
-                params: {
-                    type: 1
-                }
-            })
+    login() {
+        if (!this.email || !this.password) {
+          this.$toast.fail('邮箱与密码不能为空！');
+          return false
         }
+        if (!this.$validate.emailVali(this.email)) {
+          this.$toast.fail('邮箱格式有误！');
+          return false
+        }
+        if (this.password.length < 6) {
+          this.$toast.fail('请填写正确的密码');
+          return false
+        }
+        this.$post('/login', {
+          email: this.email,
+          password: this.password
+        }).then(res => {
+          if (res.success) {
+            this.$router.replace("/main")
+          } else {
+            this.$toast.fail(res.result)
+          }
+        })
+      },
+      toRegister() {
+        this.$router.push('/register')
+      },
+      toSetPwd() {
+        this.$router.push({
+          name: "setPwd",
+          params: {
+            type: 1
+          }
+        })
+      }
     }
 }
 </script>

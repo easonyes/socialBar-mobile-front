@@ -83,7 +83,7 @@ export default {
             }).then(res => {
                 if(res.success) {
                     // 跳转主页
-                    this.$router.replace('/')
+                    this.$router.replace('/main')
                 } else {
                     this.$toast.fail(res.result)
                 }

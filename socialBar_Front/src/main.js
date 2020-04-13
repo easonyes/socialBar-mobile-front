@@ -15,17 +15,20 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import Header from './common/Header.vue'
 import CodeBox from './common/CodeBox.vue'
-
+import vconsole from 'vconsole'
+import VueCropper from 'vue-cropper'
 Vue.config.productionTip = false
 
 // 导入所有 vant 组件
 Vue.use(Vant);
+Vue.use(VueCropper)
 
 // 注册全局组件
 Vue.component("Header", Header)
 Vue.component("CodeBox", CodeBox)
 
 // 定义全局变量
+Vue.prototype.$vconsole = new vconsole()
 Vue.prototype.$post = post
 Vue.prototype.$axios = axios
 Vue.prototype.$get = get
