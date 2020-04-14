@@ -88,7 +88,7 @@ export default {
                         }, 1000)
                         // this.$router.push('/setPwd')
                     } else {
-                        this.$toast.fail("获取验证码失败，请稍后重试！")
+                        this.$toast.fail(res.error_email)
                         this.clicked = false
                     }
                 }).catch(err => {

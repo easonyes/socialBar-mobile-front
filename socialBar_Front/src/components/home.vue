@@ -57,4 +57,7 @@ export default {
 /deep/ .van-tabs__line {
     z-index: 0;
 }
+// /deep/ .van-toast {
+//   width: 50%;
+// }
 </style>

@@ -40,6 +40,7 @@ export default {
           localStorage.setItem('avatar', result.avatar)
           localStorage.setItem('id', result.id)
           localStorage.setItem('name', result.nickname)
+          localStorage.setItem('status', result.status)
           localStorage.setItem('email', result.email)
           this.$router.replace("/main")
         }
@@ -64,6 +65,12 @@ export default {
           password: this.password
         }).then(res => {
           if (res.success) {
+            let result = JSON.parse(res.studentInfo)[0].fields
+            localStorage.setItem('avatar', result.avatar)
+            localStorage.setItem('id', result.id)
+            localStorage.setItem('name', result.nickname)
+            localStorage.setItem('status', result.status)
+            localStorage.setItem('email', result.email)
             this.$router.replace("/main")
           } else {
             this.$toast.fail(res.result)

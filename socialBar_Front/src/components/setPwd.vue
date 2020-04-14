@@ -167,7 +167,14 @@ export default {
             this.$post("/setPwd", params).then(res => {
                 if (res.success) {
                     this.$toast.success("注册成功！")
+                    let result = JSON.parse(res.studentInfo)[0].fields
+                    localStorage.setItem('avatar', result.avatar)
+                    localStorage.setItem('id', result.id)
+                    localStorage.setItem('name', result.nickname)
+                    localStorage.setItem('status', result.status)
+                    localStorage.setItem('email', result.email)
                     // 进入主页
+                    this.$router.replace("/main")
                 } else{
                     this.$toast.fail("注册失败，请重试！")
                 }

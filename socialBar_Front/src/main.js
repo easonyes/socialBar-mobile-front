@@ -17,11 +17,15 @@ import Header from './common/Header.vue'
 import CodeBox from './common/CodeBox.vue'
 import vconsole from 'vconsole'
 import VueCropper from 'vue-cropper'
+import { Notify, Dialog } from 'vant';
+
 Vue.config.productionTip = false
 
 // 导入所有 vant 组件
 Vue.use(Vant);
 Vue.use(VueCropper)
+Vue.use(Notify);
+Vue.use(Dialog);
 
 // 注册全局组件
 Vue.component("Header", Header)

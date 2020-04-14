@@ -83,7 +83,13 @@ export default {
             }).then(res => {
                 if(res.success) {
                     // 跳转主页
-                    this.$router.replace('/main')
+                    let result = JSON.parse(res.studentInfo)[0].fields
+                    localStorage.setItem('avatar', result.avatar)
+                    localStorage.setItem('id', result.id)
+                    localStorage.setItem('name', result.nickname)
+                    localStorage.setItem('email', result.email)
+                    localStorage.setItem('status', result.status)
+                    this.$router.replace("/main")
                 } else {
                     this.$toast.fail(res.result)
                 }

@@ -18,18 +18,40 @@
       <div class="mainInfo">
         <div>
           <div>3</div>
-          <div>粉丝</div>
+          <div class="label">粉丝</div>
         </div>
+        <div style="height: 30px; border-left: 1px solid #ccc;"></div>
         <div>
           <div>20</div>
-          <div>关注</div>
+          <div class="label">关注</div>
         </div>
+        <div style="height: 30px; border-left: 1px solid #ccc;"></div>
         <div>
           <div>20</div>
-          <div>动态</div>
+          <div class="label">动态</div>
         </div>
       </div>
     </div>
+    <div class="settings">
+      <van-cell is-link :value="isVerified == 1 ? '已认证' : '未认证' " @click="isShow = true">
+        <template #title>
+          <span class="custom-title">实名认证</span>
+          <van-tag v-show="isVerified == 2" type="danger">游客</van-tag>
+          <van-tag v-show="isVerified == 1" type="success">会员</van-tag>
+        </template>
+      </van-cell>
+    </div>
+    <van-dialog
+      v-model="isShow"
+      show-cancel-button
+      @confirm="verify"
+      :beforeClose="beforeClose">
+      <van-field
+        v-model="idCard"
+        label="身份证"
+        placeholder="请输入身份证"
+      />
+    </van-dialog>
     <div class="changeAvatar" @click="changeAvatar = false" v-if="changeAvatar">
       <van-icon style="position: absolute;top: 15px;left: 20px;" color="#fff" size="20px"  name="cross" />
       <img class="showImg" :src="showImg" alt="">
@@ -69,10 +91,16 @@
 export default {
   data() {
     return {
+      // 认证弹框
+      isShow: false,
+      // 身份证号
+      idCard: '330102199803079177',
+      // 是否认证
+      isVerified: localStorage.getItem('status'),
       // 更换头像界面
       changeAvatar: false,
       // 显示头像
-      showImg: localStorage.getItem('avatar'),
+      showImg: localStorage.getItem('avatar') + "?t=" + Math.random(),
       fileList: [],
       // 截图界面
       imgGot: false,
@@ -98,7 +126,51 @@ export default {
   },
   created() {
   },
+  mounted() {
+    if (this.isVerified != 1) {
+      this.$notify({
+        message: '实名认证后享受更多功能哦',
+        type: 'warning',
+        duration: 2000,
+      });
+    }
+  },
   methods: {
+    // 实名认证
+    verify() {
+      if (!this.idCard) {
+        this.$toast.fail("身份证号不能为空！")
+        return
+      }
+      let idRes = this.$validate.idCodeValid(this.idCard)
+      if (idRes.pass) {
+        this.$post('/verify', {
+          idCard: this.idCard
+        }).then(res => {
+          if (res.success) {
+            localStorage.setItem('status', 1)
+            this.isVerified = 1
+            this.isShow = false
+            this.$notify({
+              message: '实名认证成功！',
+              type: 'success',
+              duration: 2000,
+            });
+          } else {
+            this.$toast.fail(res.result)
+          }
+        })
+      } else {
+        this.$toast.fail(idRes.msg)
+      }
+    },
+    beforeClose(action, done) {
+      if (action === "confirm") {
+        done(false)
+      } else {
+        done()
+      }
+    },
     // 关闭截图
     closeCrop() {
       this.imgGot = false
@@ -174,6 +246,10 @@ export default {
     background-color: #fff;
     .personalInfo {
       display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-left: 20px;
+      padding-right: 15%;
       .avatar {
         width: 80px;
         height: 80px;
@@ -189,8 +265,19 @@ export default {
       }
     }
     .mainInfo {
+      height: 50px;
+      margin-top: 15px;
       display: flex;
+      justify-content: space-around;
+      align-items: center;
+      .label {
+        font-size: 14px;
+        color: rgb(122, 115, 115);
+      }
     }
+  }
+  .settings {
+    margin-top: 30px;
   }
   .changeAvatar {
     position: fixed;
