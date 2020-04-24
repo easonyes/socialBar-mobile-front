@@ -33,7 +33,7 @@
       </div>
     </div>
     <div class="settings">
-      <van-cell is-link :value="isVerified == 1 ? '已认证' : '未认证' " @click="isShow = true">
+      <van-cell is-link :value="isVerified == 1 ? '已认证' : '未认证' " @click="beforeVerify">
         <template #title>
           <span class="custom-title">实名认证</span>
           <van-tag v-show="isVerified == 2" type="danger">游客</van-tag>
@@ -94,7 +94,7 @@ export default {
       // 认证弹框
       isShow: false,
       // 身份证号
-      idCard: '330102199803079177',
+      idCard: '',
       // 是否认证
       isVerified: localStorage.getItem('status'),
       // 更换头像界面
@@ -122,7 +122,7 @@ export default {
         centerBox: false, // 截图框是否被限制在图片里面
         infoTrue: true // true 为展示真实输出图片宽高 false 展示看到的截图框宽高
       },
-    } 
+    }
   },
   created() {
   },
@@ -136,6 +136,18 @@ export default {
     }
   },
   methods: {
+    // 点击认证
+    beforeVerify() {
+      if(this.isVerified == 1) {
+        this.$notify({
+          message: '您已经认证成功啦，快去发表动态吧！',
+          type: 'success',
+          duration: 2000,
+        });
+      } else {
+        this.isShow = true
+      }
+    },
     // 实名认证
     verify() {
       if (!this.idCard) {

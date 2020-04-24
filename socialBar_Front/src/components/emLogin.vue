@@ -1,6 +1,6 @@
 <template>
   <div>
-        <Header title="登录" rText="密码登录" />
+        <Header title="登录" rText="密码登录" :rightClick="rightClick" />
         <img src="../assets/logo.png">
         <div class="loginBox">
             <CodeBox @emailBlur="emailBlur" @codeBlur="codeBlur" />
@@ -29,6 +29,9 @@ export default {
     },
     mounted() {},
     methods: {
+      rightClick() {
+        this.$router.push("/login")
+      },
         emailBlur(val) {
             this.email = val
             // console.log(val)
@@ -65,7 +68,6 @@ export default {
                 this.$toast.fail('邮箱格式有误！');
                 return false
             }
-            
         },
         login() {
             if (!this.email || !this.code) {
@@ -84,6 +86,7 @@ export default {
                 if(res.success) {
                     // 跳转主页
                     let result = JSON.parse(res.studentInfo)[0].fields
+                    localStorage.setItem('userinfo', result)
                     localStorage.setItem('avatar', result.avatar)
                     localStorage.setItem('id', result.id)
                     localStorage.setItem('name', result.nickname)

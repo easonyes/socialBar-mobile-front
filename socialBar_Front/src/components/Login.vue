@@ -1,6 +1,6 @@
 <template>
   <div>
-    <Header title="登录" rText="验证码登录" />
+    <Header title="登录" rText="验证码登录" :rightClick="rightClick" />
     <img src="../assets/logo.png">
     <div class="loginBox">
         <van-field
@@ -37,6 +37,7 @@ export default {
       this.$post("/login").then(res => {
         if (res.success) {
           let result = JSON.parse(res.studentInfo)[0].fields
+          localStorage.setItem('userinfo', result)
           localStorage.setItem('avatar', result.avatar)
           localStorage.setItem('id', result.id)
           localStorage.setItem('name', result.nickname)
@@ -47,6 +48,9 @@ export default {
       })
     },
     methods: {
+      rightClick() {
+        this.$router.push("/emLogin")
+      },
     login() {
         if (!this.email || !this.password) {
           this.$toast.fail('邮箱与密码不能为空！');
@@ -66,6 +70,7 @@ export default {
         }).then(res => {
           if (res.success) {
             let result = JSON.parse(res.studentInfo)[0].fields
+            localStorage.setItem('userinfo', result)
             localStorage.setItem('avatar', result.avatar)
             localStorage.setItem('id', result.id)
             localStorage.setItem('name', result.nickname)

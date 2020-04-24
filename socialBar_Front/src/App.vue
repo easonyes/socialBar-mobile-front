@@ -1,12 +1,27 @@
 <template>
   <div id="app">
     <router-view/>
+    <!-- <div>xxx</div>
+    <my-add></my-add>
+    <p>***************</p>
+    <my-dec></my-dec> -->
   </div>
 </template>
 
 <script>
+// import add from './components/test'
+// import dec from './components/test1'
 export default {
-  name: 'App'
+  name: 'App',
+  // data() {
+  //   return {
+
+  //   }
+  // },
+  // components: {
+  //   'my-add': add,
+  //   'my-dec': dec
+  // }
 }
 </script>
 

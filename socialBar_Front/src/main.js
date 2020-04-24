@@ -17,7 +17,8 @@ import Header from './common/Header.vue'
 import CodeBox from './common/CodeBox.vue'
 import vconsole from 'vconsole'
 import VueCropper from 'vue-cropper'
-import { Notify, Dialog } from 'vant';
+import { Notify, Dialog } from 'vant'
+import store from './store'
 
 Vue.config.productionTip = false
 
@@ -45,5 +46,6 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store
 })

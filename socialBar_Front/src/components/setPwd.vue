@@ -168,6 +168,7 @@ export default {
                 if (res.success) {
                     this.$toast.success("注册成功！")
                     let result = JSON.parse(res.studentInfo)[0].fields
+                    localStorage.setItem('userinfo', result)
                     localStorage.setItem('avatar', result.avatar)
                     localStorage.setItem('id', result.id)
                     localStorage.setItem('name', result.nickname)
