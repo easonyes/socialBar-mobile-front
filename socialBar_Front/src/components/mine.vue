@@ -94,7 +94,7 @@ export default {
       // 认证弹框
       isShow: false,
       // 身份证号
-      idCard: '',
+      idCard: '330102199803079177',
       // 是否认证
       isVerified: localStorage.getItem('status'),
       // 更换头像界面
@@ -160,8 +160,8 @@ export default {
           idCard: this.idCard
         }).then(res => {
           if (res.success) {
-            localStorage.setItem('status', 1)
-            this.isVerified = 1
+            // localStorage.setItem('status', 1)
+            // this.isVerified = 1
             this.isShow = false
             this.$notify({
               message: '实名认证成功！',

@@ -86,12 +86,15 @@ export default {
                 if(res.success) {
                     // 跳转主页
                     let result = JSON.parse(res.studentInfo)[0].fields
+                    console.log(result)
+                    this.$store.commit('setCurrentSite', result.defaultSite)
+                    this.$store.commit('setSiteList', result.siteList)
                     localStorage.setItem('userinfo', result)
+                    localStorage.setItem('status', result.status)
                     localStorage.setItem('avatar', result.avatar)
                     localStorage.setItem('id', result.id)
                     localStorage.setItem('name', result.nickname)
                     localStorage.setItem('email', result.email)
-                    localStorage.setItem('status', result.status)
                     this.$router.replace("/main")
                 } else {
                     this.$toast.fail(res.result)

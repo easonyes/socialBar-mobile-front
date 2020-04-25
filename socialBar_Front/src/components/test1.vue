@@ -1,12 +1,12 @@
 <template>
   <div>
     <h1>count:{{ count }}</h1>
-    <button @click="$store.commit('dec')">--</button>
+    <button @click="dec">--</button>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
   data() {
     return {}
@@ -15,6 +15,9 @@ export default {
     ...mapState([
       'count'
     ])
+  },
+  methods: {
+    ...mapMutations(['dec'])
   }
 }
 </script>

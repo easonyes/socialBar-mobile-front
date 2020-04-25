@@ -10,7 +10,7 @@
         >
             <van-icon v-if="rIcon" :name="rIcon" slot="left" />
             <van-dropdown-menu v-if="options.length > 0"  slot="right" >
-                <van-dropdown-item v-model="rChoose" :options="options"/>
+                <van-dropdown-item v-model="rChoose" @change="siteChange" :options="options"/>
             </van-dropdown-menu>
         </van-nav-bar>
     </div>
@@ -50,21 +50,24 @@ export default {
     },
     data() {
         return {
-            rChoose: "1"
+          rChoose: this.$store.state.currentSite
         }
     },
     methods: {
-        onClickLeft() {
-            this.$router.go(-1)
-        },
-        onClickRight() {
-          if (this.rText === "验证码登录") {
-            this.$router.push("/emLogin")
-          }
-          if (this.rText === "密码登录") {
-            this.$router.push("/login")
-          }
+      onClickLeft() {
+        this.$router.go(-1)
+      },
+      siteChange(val) {
+        this.$store.commit('changeCurrentSite', val)
+      },
+      onClickRight() {
+        if (this.rText === "验证码登录") {
+          this.$router.push("/emLogin")
         }
+        if (this.rText === "密码登录") {
+          this.$router.push("/login")
+        }
+      }
     }
 }
 </script>

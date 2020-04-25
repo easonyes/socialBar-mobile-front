@@ -34,11 +34,7 @@ export default {
         message: '',
         postShow: false,
         currentSite: "全国热门",
-        options: [
-            {text: "主站", value: "1"},
-            {text: "杭州站", value: "2"},
-            {text: "杭州电子科技大学1111111111", value: "3"}
-        ],
+        options: this.$store.state.siteList,
         // 当前选中的底部标签
         bottomActive: "main",
         // 动态图片列表

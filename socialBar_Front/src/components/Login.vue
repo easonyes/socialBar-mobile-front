@@ -37,11 +37,14 @@ export default {
       this.$post("/login").then(res => {
         if (res.success) {
           let result = JSON.parse(res.studentInfo)[0].fields
+          console.log(result)
+          this.$store.commit('setCurrentSite', result.defaultSite)
+          this.$store.commit('setSiteList', result.siteList)
+          localStorage.setItem('status', result.status)
           localStorage.setItem('userinfo', result)
           localStorage.setItem('avatar', result.avatar)
           localStorage.setItem('id', result.id)
           localStorage.setItem('name', result.nickname)
-          localStorage.setItem('status', result.status)
           localStorage.setItem('email', result.email)
           this.$router.replace("/main")
         }
@@ -70,11 +73,14 @@ export default {
         }).then(res => {
           if (res.success) {
             let result = JSON.parse(res.studentInfo)[0].fields
+            console.log(result)
+            this.$store.commit('setCurrentSite', result.defaultSite)
+            this.$store.commit('setSiteList', result.siteList)
+            localStorage.setItem('status', result.status)
             localStorage.setItem('userinfo', result)
             localStorage.setItem('avatar', result.avatar)
             localStorage.setItem('id', result.id)
             localStorage.setItem('name', result.nickname)
-            localStorage.setItem('status', result.status)
             localStorage.setItem('email', result.email)
             this.$router.replace("/main")
           } else {
