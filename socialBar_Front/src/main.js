@@ -41,6 +41,14 @@ Vue.prototype.$delete = deleteUrl
 Vue.prototype.$patch = patchUrl
 Vue.prototype.$validate = validate
 
+Vue.prototype.$mess = function(res) {
+  if (res.success) {
+    this.$toast.success(res.result)
+  } else {
+    this.$toast.fail(res.result)
+  }
+}
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

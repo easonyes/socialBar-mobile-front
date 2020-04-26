@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :title="headerTitle"  />
+        <Header :title="headerTitle" :leftClick="leftClick" />
         <div class="contentBox">
             <div v-if="type == 1">
                 <CodeBox @emailBlur="emailBlur" @codeBlur="codeBlur" />
@@ -116,6 +116,9 @@ export default {
         }
     },
     methods: {
+      leftClick() {
+        this.$router.go(-1)
+      },
         emailBlur(val) {
             this.email = val
             // console.log(val)

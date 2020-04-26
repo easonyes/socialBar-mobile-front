@@ -13,7 +13,8 @@
           />
           <!-- <img class="img"  :src="showImg" alt=""> -->
         </div>
-        <div class="sName" @click="changeAvatar = true">为什么要想名字</div>
+        <div class="sName" @click="changeAvatar = true">{{ baseInfo.name }}</div>
+        <van-icon @click="infoEdit" name="edit" />
       </div>
       <div class="mainInfo">
         <div>
@@ -84,6 +85,28 @@
         :fixedBox="option.fixedBox"
       ></vueCropper>
     </div>
+    <van-popup v-model="infoShow" position="right" :style="{ width: '100%', height: '100%', background: 'rgb(222,220,220)' }">
+      <Header rIcon :leftClick="leftClick" title="账号资料" rText="保存" :rightClick="rightClick"></Header>
+      <van-cell-group style="margin-top: 20px;">
+        <van-field v-model="baseInfo.name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+        <van-field v-model="baseInfo.name" label="生日" input-align="right" is-link placeholder="请输入用户名" />
+        <van-datetime-picker
+          v-model="baseInfo.birthday"
+          type="date"
+          :min-date="minDate"
+          :max-date="maxDate"
+        />
+        <!-- <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" /> -->
+      </van-cell-group>
+      <van-cell-group style="margin-top: 20px;">
+        <!-- <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" /> -->
+      </van-cell-group>
+    </van-popup>
   </div>
 </template>
 
@@ -91,6 +114,16 @@
 export default {
   data() {
     return {
+      minDate: new Date(1900, 0, 1),
+      maxDate: new Date(),
+      // 基础信息编辑
+      infoShow: false,
+      // 基础信息
+      baseInfo: {
+        // 用户昵称
+        name: localStorage.getItem('name'),
+        birthday: new Date(2000, 0, 1)
+      },
       // 认证弹框
       isShow: false,
       // 身份证号
@@ -100,7 +133,7 @@ export default {
       // 更换头像界面
       changeAvatar: false,
       // 显示头像
-      showImg: localStorage.getItem('avatar') + "?t=" + Math.random(),
+      showImg: localStorage.getItem('avatar'),
       fileList: [],
       // 截图界面
       imgGot: false,
@@ -136,6 +169,23 @@ export default {
     }
   },
   methods: {
+    // 点击头部左侧
+    leftClick() {
+      this.infoShow = false
+    },
+    // 点击保存
+    rightClick() {
+
+    },
+    // 基础信息编辑
+    infoEdit() {
+      if (this.isVerified == 1) {
+        this.$router.push("/infoEdit")
+      } else {
+        this.$toast.fail("请先完成您的实名认证哦!")
+      }
+      // this.infoShow = true
+    },
     // 点击认证
     beforeVerify() {
       if(this.isVerified == 1) {
@@ -160,8 +210,8 @@ export default {
           idCard: this.idCard
         }).then(res => {
           if (res.success) {
-            // localStorage.setItem('status', 1)
-            // this.isVerified = 1
+            localStorage.setItem('status', 1)
+            this.isVerified = 1
             this.isShow = false
             this.$notify({
               message: '实名认证成功！',
@@ -193,12 +243,12 @@ export default {
       this.$refs.cropper.getCropData((data) => {
         // do something
         this.$post('/uploadAvatar', {
-          avatar: data.replace(/data:image\/.*;base64,/, '')  
+          avatar: data.replace(/data:image\/.*;base64,/, '')
           // avatar: file.content
         }).then(res => {
           if (res.success) {
             this.showImg = data
-            localStorage.setItem('avatar', res.avatar)
+            localStorage.setItem('avatar', res.avatar + "?t=" + Math.random())
             this.imgGot = false
             this.$toast.success(res.result);
           }
@@ -261,7 +311,8 @@ export default {
       align-items: center;
       justify-content: space-between;
       padding-left: 20px;
-      padding-right: 15%;
+      padding-right: 15px;
+      padding-top: 5px;
       .avatar {
         width: 80px;
         height: 80px;
@@ -273,7 +324,10 @@ export default {
         }
       }
       .sName {
-        
+        // width: 60%;
+      }
+      /deep/ .van-icon-edit {
+        font-size: 24px;
       }
     }
     .mainInfo {

@@ -10,6 +10,7 @@ import main from '@/components/main'
 import collection from '@/components/collection'
 import chat from '@/components/chat'
 import mine from '@/components/mine'
+import infoEdit from '@/components/info'
 
 Vue.use(Router)
 
@@ -17,9 +18,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld,
-      redirect: "/login"
+      redirect: "/emLogin"
     },
     {
       path: '/register',
@@ -40,6 +39,11 @@ export default new Router({
       path: '/emLogin',
       name: 'emLogin',
       component: emLogin
+    },
+    {
+      path: '/infoEdit',
+      name: 'infoEdit',
+      component: infoEdit
     },
     {
       path: '/',

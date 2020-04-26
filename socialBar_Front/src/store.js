@@ -10,10 +10,16 @@ export default new Vuex.Store({
     currentSite: 1,
     // 站点列表
     siteList: [{"text": "主站", "value": 1}],
+    // tab选中值
+    bottomTab: 'main'
     // // 默认未认证状态
     // isVerified: 2
   },
   mutations: {
+    // 设置底部标签值
+    setBottomTab(state, tab) {
+      state.bottomTab = tab
+    },
     // 设置当前站点
     setCurrentSite(state, site) {
       state.currentSite = site
