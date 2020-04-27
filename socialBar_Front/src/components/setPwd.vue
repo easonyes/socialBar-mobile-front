@@ -175,9 +175,9 @@ export default {
                     this.$store.commit('setCurrentSite', result.defaultSite)
                     this.$store.commit('setSiteList', result.siteList)
                     localStorage.setItem('status', result.status)
-                    localStorage.setItem('userinfo', result)
+                    localStorage.setItem('userinfo', JSON.stringify(result))
                     localStorage.setItem('avatar', result.avatar)
-                    localStorage.setItem('id', result.id)
+                    localStorage.setItem('id', res.user_id)
                     localStorage.setItem('name', result.nickname)
                     localStorage.setItem('email', result.email)
                     // 进入主页

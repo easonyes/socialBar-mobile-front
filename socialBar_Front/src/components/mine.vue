@@ -34,7 +34,7 @@
       </div>
     </div>
     <div class="settings">
-      <van-cell is-link :value="isVerified == 1 ? '已认证' : '未认证' " @click="beforeVerify">
+      <van-cell :title-style="{ textAlign: 'left' }" is-link :value="isVerified == 1 ? '已认证' : '未认证' " @click="beforeVerify">
         <template #title>
           <span class="custom-title">实名认证</span>
           <van-tag v-show="isVerified == 2" type="danger">游客</van-tag>
@@ -42,6 +42,17 @@
         </template>
       </van-cell>
     </div>
+    <van-cell-group style="text-align: left">
+      <van-field label-align="left" label="更改密码" readonly @click="changePwd" input-align="right" is-link />
+      <!-- <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+      <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
+      <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" /> -->
+    </van-cell-group>
+    <van-cell-group style="text-align: left; margin-top: 20px;">
+      <van-field label="uuid" readonly :value="uId" input-align="right" />
+      <van-field label="就读学校" readonly :value="currentSchool" input-align="right" />
+      <van-field label="当前学历" readonly :value="currentEducation" input-align="right" />
+    </van-cell-group>
     <van-dialog
       v-model="isShow"
       show-cancel-button
@@ -85,28 +96,6 @@
         :fixedBox="option.fixedBox"
       ></vueCropper>
     </div>
-    <van-popup v-model="infoShow" position="right" :style="{ width: '100%', height: '100%', background: 'rgb(222,220,220)' }">
-      <Header rIcon :leftClick="leftClick" title="账号资料" rText="保存" :rightClick="rightClick"></Header>
-      <van-cell-group style="margin-top: 20px;">
-        <van-field v-model="baseInfo.name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
-        <van-field v-model="baseInfo.name" label="生日" input-align="right" is-link placeholder="请输入用户名" />
-        <van-datetime-picker
-          v-model="baseInfo.birthday"
-          type="date"
-          :min-date="minDate"
-          :max-date="maxDate"
-        />
-        <!-- <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
-        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
-        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
-        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" /> -->
-      </van-cell-group>
-      <van-cell-group style="margin-top: 20px;">
-        <!-- <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
-        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
-        <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" /> -->
-      </van-cell-group>
-    </van-popup>
   </div>
 </template>
 
@@ -114,10 +103,12 @@
 export default {
   data() {
     return {
+      // 就读学校
+      currentSchool: JSON.parse(localStorage.getItem('userinfo')).currentSchool,
+      // 用户id
+      uId: localStorage.getItem('id'),
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(),
-      // 基础信息编辑
-      infoShow: false,
       // 基础信息
       baseInfo: {
         // 用户昵称
@@ -159,6 +150,21 @@ export default {
   },
   created() {
   },
+  computed: {
+    // 当前学历
+    currentEducation() {
+      switch(JSON.parse(localStorage.getItem('userinfo')).currentEducation) {
+        case 4:
+          return '博士'
+        case 3:
+          return '硕士'
+        case 2:
+          return '本科'
+        case 1:
+          return '专科'
+      }
+    }
+  },
   mounted() {
     if (this.isVerified != 1) {
       this.$notify({
@@ -169,14 +175,8 @@ export default {
     }
   },
   methods: {
-    // 点击头部左侧
-    leftClick() {
-      this.infoShow = false
-    },
-    // 点击保存
-    rightClick() {
-
-    },
+    // 点击更改密码
+    changePwd() {},
     // 基础信息编辑
     infoEdit() {
       if (this.isVerified == 1) {
@@ -184,7 +184,6 @@ export default {
       } else {
         this.$toast.fail("请先完成您的实名认证哦!")
       }
-      // this.infoShow = true
     },
     // 点击认证
     beforeVerify() {
@@ -273,7 +272,7 @@ export default {
       // let img = new Image()
       // img.src = file.content // 指定图片的DataURL(图片的base64编码数据)
       // img.onload = () => {
-      //   canvas.width = 300 
+      //   canvas.width = 300
       //   canvas.height = 300
       //   context.drawImage(img, 0, 0, 300, 300)
       //   file.content = canvas.toDataURL(file.file.type, 0.92) // 0.92为默认压缩质量

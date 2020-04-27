@@ -30,14 +30,15 @@ export default {
     created() {
       this.$post("/login").then(res => {
         if (res.success) {
+          console.log(res)
           let result = JSON.parse(res.studentInfo)[0].fields
           console.log(result)
           this.$store.commit('setCurrentSite', result.defaultSite)
           this.$store.commit('setSiteList', result.siteList)
           localStorage.setItem('status', result.status)
-          localStorage.setItem('userinfo', result)
+          localStorage.setItem('userinfo', JSON.stringify(result))
           localStorage.setItem('avatar', result.avatar)
-          localStorage.setItem('id', result.id)
+          localStorage.setItem('id', res.user_id)
           localStorage.setItem('name', result.nickname)
           localStorage.setItem('email', result.email)
           this.$router.replace("/main")
@@ -106,10 +107,10 @@ export default {
                     console.log(result)
                     this.$store.commit('setCurrentSite', result.defaultSite)
                     this.$store.commit('setSiteList', result.siteList)
-                    localStorage.setItem('userinfo', result)
+                    localStorage.setItem('userinfo', JSON.stringify(result))
                     localStorage.setItem('status', result.status)
                     localStorage.setItem('avatar', result.avatar)
-                    localStorage.setItem('id', result.id)
+                    localStorage.setItem('id', res.user_id)
                     localStorage.setItem('name', result.nickname)
                     localStorage.setItem('email', result.email)
                     this.$router.replace("/main")
