@@ -85,10 +85,22 @@ export default {
         this.postShow = false
       },
       rightClick() {
+        if(!this.content && this.fileList.length === 0) {
+          this.$toast.fail('请输入动态内容')
+          return false
+        }
         this.$post('/postDynamic', {
-
+          content: this.content,
+          imgs: this.fileList,
+          createPlace: this.success ? this.LocationCity : "",
+          nickName: localStorage.getItem('name')
         }).then(res => {
-          console.log(res)
+          this.$mess(res)
+          if(res.success) {
+            this.postShow = false
+            this.content = ""
+            this.fileList = []
+          }
         })
       },
       // 获取当前城市定位

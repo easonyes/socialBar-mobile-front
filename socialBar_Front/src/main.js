@@ -15,6 +15,7 @@ import Vant from 'vant';
 import 'vant/lib/index.css';
 import Header from './common/Header.vue'
 import CodeBox from './common/CodeBox.vue'
+import postBox from './common/postBox.vue'
 import vconsole from 'vconsole'
 import VueCropper from 'vue-cropper'
 import { Notify, Dialog } from 'vant'
@@ -31,6 +32,7 @@ Vue.use(Dialog);
 // 注册全局组件
 Vue.component("Header", Header)
 Vue.component("CodeBox", CodeBox)
+Vue.component("postBox", postBox)
 
 // 定义全局变量
 Vue.prototype.$vconsole = new vconsole()

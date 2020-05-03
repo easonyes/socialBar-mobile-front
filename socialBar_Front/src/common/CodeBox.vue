@@ -34,7 +34,6 @@
 import icon from '../assets/img/icon-demo-1126.png'
 export default {
     props: {
-        
     },
     data() {
         return {

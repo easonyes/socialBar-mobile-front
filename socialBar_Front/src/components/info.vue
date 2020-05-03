@@ -74,7 +74,13 @@ export default {
   },
   mounted() {
     this.$get('/getUserInfo').then(res => {
-      console.log(res)
+      if(res.data.success) {
+        this.baseInfo.name = res.data.studentInfo.nickName
+        this.baseInfo.birthday = res.data.studentInfo.birthday
+        this.baseInfo.age = res.data.studentInfo.age
+        this.baseInfo.gender = res.data.studentInfo.gender
+        this.baseInfo.genderShow = this.columns[res.data.studentInfo.gender]
+      }
     })
   },
   methods: {
