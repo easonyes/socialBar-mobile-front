@@ -172,8 +172,16 @@ export default {
                     this.$toast.success("注册成功！")
                     let result = JSON.parse(res.studentInfo)[0].fields
                     console.log(result)
+                    localStorage.setItem('currentSite', result.defaultSite)
                     this.$store.commit('setCurrentSite', result.defaultSite)
-                    this.$store.commit('setSiteList', result.siteList)
+                    // this.$store.commit('setSiteList', result.siteList)
+                    let siteList = eval(result.siteList).map(item => {
+                      item['text'] = item.siteName
+                      item['value'] = item.id
+                      console.log(item)
+                      return item
+                    })
+                    localStorage.setItem('siteList', JSON.stringify(siteList))
                     localStorage.setItem('status', result.status)
                     localStorage.setItem('userinfo', JSON.stringify(result))
                     localStorage.setItem('avatar', result.avatar)

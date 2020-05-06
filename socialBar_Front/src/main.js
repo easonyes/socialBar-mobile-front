@@ -18,7 +18,7 @@ import CodeBox from './common/CodeBox.vue'
 import postBox from './common/postBox.vue'
 import vconsole from 'vconsole'
 import VueCropper from 'vue-cropper'
-import { Notify, Dialog } from 'vant'
+import { Notify, Dialog, Lazyload, ShareSheet } from 'vant'
 import store from './store'
 
 Vue.config.productionTip = false
@@ -28,6 +28,10 @@ Vue.use(Vant);
 Vue.use(VueCropper)
 Vue.use(Notify);
 Vue.use(Dialog);
+Vue.use(ShareSheet);
+Vue.use(Lazyload, {
+  lazyComponent: true,
+})
 
 // 注册全局组件
 Vue.component("Header", Header)
@@ -50,6 +54,7 @@ Vue.prototype.$mess = function(res) {
     this.$toast.fail(res.result)
   }
 }
+
 
 /* eslint-disable no-new */
 new Vue({

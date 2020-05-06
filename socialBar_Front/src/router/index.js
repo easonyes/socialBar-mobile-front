@@ -53,7 +53,10 @@ export default new Router({
         {
           path: '/main',
           name: 'main',
-          component: main
+          component: main,
+          meta: {
+            keepAlive: true
+          }
         },
         {
           path: '/collection',

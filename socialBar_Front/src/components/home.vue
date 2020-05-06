@@ -1,7 +1,10 @@
 <template>
     <div class="main">
-        <Header :title="currentSite" :options="options" />
-        <router-view></router-view>
+        <Header search :options="options" />
+        <keep-alive>
+          <router-view v-if="$route.meta.keepAlive"></router-view>
+        </keep-alive>
+        <router-view v-if="!$route.meta.keepAlive"></router-view>
         <van-tabbar v-model="bottomActive" @change="tabChange">
           <van-tabbar-item name="main" icon="home-o">主页</van-tabbar-item>
           <van-tabbar-item name="collection" icon="description">收藏</van-tabbar-item>
@@ -40,7 +43,7 @@ export default {
         message: '',
         postShow: false,
         currentSite: "全国热门",
-        options: this.$store.state.siteList,
+        options: JSON.parse(localStorage.getItem('siteList')),
         // 当前选中的底部标签
         bottomActive: this.$store.state.bottomTab,
         // 动态图片列表
@@ -59,8 +62,7 @@ export default {
     },
     computed: {
       ...mapState([
-        'bottomTab',
-        'siteList'
+        'bottomTab'
       ])
     },
     methods: {
@@ -93,7 +95,8 @@ export default {
           content: this.content,
           imgs: this.fileList,
           createPlace: this.success ? this.LocationCity : "",
-          nickName: localStorage.getItem('name')
+          nickName: localStorage.getItem('name'),
+          site: this.$store.state.currentSite
         }).then(res => {
           this.$mess(res)
           if(res.success) {

@@ -176,7 +176,14 @@ export default {
   },
   methods: {
     // 点击更改密码
-    changePwd() {},
+    changePwd() {
+      this.$router.push({
+        name: "setPwd",
+        params: {
+          type: 3
+        }
+      })
+    },
     // 基础信息编辑
     infoEdit() {
       if (this.isVerified == 1) {
