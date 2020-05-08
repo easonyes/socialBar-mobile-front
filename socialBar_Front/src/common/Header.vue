@@ -3,7 +3,7 @@
       <van-nav-bar
         :title="title"
         :left-text="leftText"
-        left-arrow
+        :left-arrow="back"
         :right-text="rText"
         @click-left="leftClick"
         @click-right="rightClick"
@@ -20,6 +20,10 @@
 <script>
 export default {
     props: {
+      back: {
+        type: Boolean,
+        default: false
+      },
       title: {
         type: String,
         default: '贴吧'
@@ -99,6 +103,7 @@ export default {
 }
 /deep/ .van-dropdown-menu {
   height: 46px;
+  width: 100%;
 }
 /deep/ .van-search {
   padding: 6px;

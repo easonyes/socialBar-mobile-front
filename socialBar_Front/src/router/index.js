@@ -11,6 +11,7 @@ import collection from '@/components/collection'
 import chat from '@/components/chat'
 import mine from '@/components/mine'
 import infoEdit from '@/components/info'
+import postDetail from '@/components/postDetail'
 
 Vue.use(Router)
 
@@ -44,6 +45,11 @@ export default new Router({
       path: '/infoEdit',
       name: 'infoEdit',
       component: infoEdit
+    },
+    {
+      path: '/postDetail',
+      name: 'postDetail',
+      component: postDetail
     },
     {
       path: '/',

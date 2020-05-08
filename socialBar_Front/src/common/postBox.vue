@@ -20,8 +20,15 @@
         </div>
       </div>
     </div>
-    <div class="content">
-      {{ content }}
+    <div v-if="!detail" class="mainContent" @click="postDetail">
+      <div v-html="showContent" :ref="'hideContent' + id" :id="'hideContent' + id" class="content hideContent">
+      </div>
+      <!-- <span v-if="textHide" class="showBtn">展开</span> -->
+    </div>
+    <div v-else class="mainContent">
+      <div v-html="showContent" :ref="'hideContent' + id" :id="'hideContent' + id" class="content">
+      </div>
+      <!-- <span v-if="textHide" class="showBtn">展开</span> -->
     </div>
     <div class="imgs">
       <van-image
@@ -30,8 +37,8 @@
         image-fit="cover"
         fit="cover"
         style="margin: 0.2rem .2rem"
-        width="6.9rem"
-        height="6.9rem"
+        width="6rem"
+        height="6rem"
         @click="getImg(index)"
         :src="item"
       />
@@ -139,10 +146,64 @@ export default {
     stared: {
       type: Boolean,
       default: false
+    },
+    // 是否是详情页
+    detail: {
+      type: Boolean,
+      default: false
+    },
+    // 点击评论
+    commentClick: {
+      type: Function,
+      default: () => {}
+    }
+  },
+  watch: {
+    // 点赞数改变
+    goodNum(val) {
+      this.goodNum1 = val
+    },
+    // 评论数改变
+    commentNum(val) {
+      this.commentNum1 = val
+    },
+    // 收藏数改变
+    starNum(val) {
+      this.starNum1 = val
+    },
+    // 分享数改变
+    shareNum(val) {
+      this.shareNum1 = val
+    },
+    // 点赞
+    liked(val) {
+      this.goodStatus = val
+      if(this.goodStatus) {
+        this.goodStyle = {
+          color: "blue"
+        }
+      } else {
+        this.goodStyle = {
+        }
+      }
+    },
+    // 收藏
+    stared(val) {
+      this.starStatus = val
+      if(this.starStatus) {
+        this.starStyle = {
+          color: "blue"
+        }
+      } else {
+        this.starStyle = {
+        }
+      }
     }
   },
   data() {
     return {
+      // 显示内容
+      showContent: this.content.replace(/\n/g, "<br/>"),
       // 点赞样式
       goodStyle: {},
       // 收藏样式
@@ -185,6 +246,13 @@ export default {
           return '博士'
       }
     },
+    // textHide() {
+    //   // console.log('hideContent' + this.id)
+    //   this.$nextTick(() => {
+    //     console.log(document.getElementById('hideContent' + this.id).offsetHeight > 66)
+    //     return document.getElementById('hideContent' + this.id).offsetHeight > 66
+    //   })
+    // },
     // // 是否点赞该评论
     // goodStatus() {
     //   return false
@@ -211,6 +279,15 @@ export default {
     }
   },
   methods: {
+    // 动态详情
+    postDetail() {
+      this.$router.push({
+        name: 'postDetail',
+        query: {
+          id: this.id
+        }
+      })
+    },
     // 图片预览
     getImg(index) {
       ImagePreview({
@@ -224,7 +301,7 @@ export default {
     goodClick() {
       this.$post('like', {
         id: this.id,
-        type: this.goodStatus ? 1 : ''
+        type: this.goodStatus ? '1' : '2'
       }).then(res => {
         console.log(res)
       })
@@ -240,18 +317,24 @@ export default {
         this.goodStatus = true
       }
     },
-    // 点评论
-    commentClick() {},
     // 点收藏
     starClick() {
+      this.$post('like', {
+        id: this.id,
+        type: this.starStatus ? '3' : '4'
+      }).then(res => {
+        console.log(res)
+      })
       if(this.starStatus) {
         this.starStyle = {}
         this.starNum1--
+        this.starStatus = false
       } else {
         this.starStyle = {
           color: "blue"
         }
         this.starNum1++
+        this.starStatus = true
       }
     },
     // 点分享
@@ -295,9 +378,32 @@ export default {
       line-height: 15px;
     }
   }
-  .content {
+  .mainContent {
     text-align: left;
-    margin-top: 10px;
+    width: 100%;
+    .content {
+      width: 100%;
+      text-align: left;
+      margin-top: 10px;
+      // height: 5.6rem;
+      // overflow: hidden;
+      word-wrap:break-word ;
+      line-height: 22px;
+    }
+    .hideContent {
+      overflow : hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+    }
+    .showBtn {
+      pointer-events: auto;
+      vertical-align: top;
+      position: relative;
+      font-size: 16px;
+      color: #5090cc;
+    }
   }
   .imgs {
     display: flex;

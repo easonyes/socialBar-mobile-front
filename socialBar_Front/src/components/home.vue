@@ -1,10 +1,11 @@
 <template>
     <div class="main">
-        <Header search :options="options" />
-        <keep-alive>
+        <Header back search :options="options" />
+        <!-- <keep-alive>
           <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
+        <router-view v-if="!$route.meta.keepAlive"></router-view> -->
+        <router-view></router-view>
         <van-tabbar v-model="bottomActive" @change="tabChange">
           <van-tabbar-item name="main" icon="home-o">主页</van-tabbar-item>
           <van-tabbar-item name="collection" icon="description">收藏</van-tabbar-item>
@@ -23,7 +24,7 @@
               placeholder="快分享您的动态吧！"
               show-word-limit
             />
-            <van-uploader style="margin: 10px 16px" :after-read="afterRead" image-fit="cover" v-model="fileList">
+            <van-uploader style="margin: 10px 16px" :max-count="9" :after-read="afterRead" image-fit="cover" v-model="fileList">
             </van-uploader>
             <div class="location" @click="getLocation">
               <van-icon name="location-o" />
@@ -54,8 +55,6 @@ export default {
         LocationCity: '你在哪里?',
         // 是否获取定位
         success: false,
-        // 正确的导航
-        correctTab: 'main'
       }
     },
     watch: {
@@ -64,6 +63,17 @@ export default {
       ...mapState([
         'bottomTab'
       ])
+    },
+    // beforeRouteEnter (to, from, next) {
+    //   next(vm => {
+    //     vm.correctTab = vm.$store.state.bottomTab
+    //     vm.bottomActive = vm.$store.state.bottomTab
+    //   })
+    // },
+    activated() {
+      if(this.$store.state.bottomTab == 'main') {
+        this.bottomActive = this.$store.state.bottomTab
+      }
     },
     methods: {
       beforePost() {
@@ -77,10 +87,9 @@ export default {
         if (val != "post" && this.$route.path.indexOf(val) == -1) {
           this.$router.push("/" + val)
           this.$store.commit('setBottomTab', val)
-          this.correctTab = val
         } else {
-          this.bottomActive = this.correctTab
-          this.$store.commit('setBottomTab', this.correctTab)
+          this.bottomActive = this.$store.state.bottomTab
+          this.$store.commit('setBottomTab', this.bottomActive)
         }
       },
       leftClick() {
