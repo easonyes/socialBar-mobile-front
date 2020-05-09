@@ -17,18 +17,18 @@
         <van-icon @click="infoEdit" name="edit" />
       </div>
       <div class="mainInfo">
-        <div>
-          <div>3</div>
+        <div @click="showFanList">
+          <div>{{ fansNum }}</div>
           <div class="label">粉丝</div>
         </div>
         <div style="height: 30px; border-left: 1px solid #ccc;"></div>
-        <div>
-          <div>20</div>
+        <div @click="showStarList">
+          <div>{{ starsNum }}</div>
           <div class="label">关注</div>
         </div>
         <div style="height: 30px; border-left: 1px solid #ccc;"></div>
-        <div>
-          <div>20</div>
+        <div @click="showPostList">
+          <div>{{ postsNum }}</div>
           <div class="label">动态</div>
         </div>
       </div>
@@ -50,8 +50,8 @@
     </van-cell-group>
     <van-cell-group style="text-align: left; margin-top: 20px;">
       <van-field label="uuid" readonly :value="uId" input-align="right" />
-      <van-field label="就读学校" readonly :value="currentSchool" input-align="right" />
-      <van-field label="当前学历" readonly :value="currentEducation" input-align="right" />
+      <van-field v-show="status != 2" label="就读学校" readonly :value="currentSchool" input-align="right" />
+      <van-field v-show="status != 2" label="当前学历" readonly :value="currentEducation" input-align="right" />
     </van-cell-group>
     <van-dialog
       v-model="isShow"
@@ -69,9 +69,9 @@
       <img class="showImg" :src="showImg" alt="">
       <!-- <van-button class="changeBtn" @click.stop="" type="default">更换头像</van-button>
       <input class="js_upFile cover1" @click.stop @change="newImg" type="file" name="cover" accept="image/*"/> -->
-      <div @click.stop="">
+      <div @click.stop="" v-show="status != 2">
         <van-uploader :after-read="afterRead" image-fit="cover" v-model="fileList" :preview-image="false">
-          <van-button class="changeBtn"  type="default">更换头像</van-button>
+          <van-button class="changeBtn" type="default">更换头像</van-button>
         </van-uploader>
       </div>
     </div>
@@ -103,22 +103,32 @@
 export default {
   data() {
     return {
+      // 用户认证状态
+      status: 1,
+      // 关注数量
+      starsNum: 0,
+      // 粉丝数量
+      fansNum: 0,
+      // 发表动态数量
+      postsNum: 0,
       // 就读学校
-      currentSchool: JSON.parse(localStorage.getItem('userinfo')).currentSchool,
+      currentSchool: "",
       // 用户id
-      uId: localStorage.getItem('id'),
+      uId: "",
+      // 学历
+      education: 1,
       minDate: new Date(1900, 0, 1),
       maxDate: new Date(),
       // 基础信息
       baseInfo: {
         // 用户昵称
-        name: localStorage.getItem('name'),
+        name: "",
         birthday: new Date(2000, 0, 1)
       },
       // 认证弹框
       isShow: false,
       // 身份证号
-      idCard: '330102199803079177',
+      idCard: '330102199803079679',
       // 是否认证
       isVerified: localStorage.getItem('status'),
       // 更换头像界面
@@ -153,7 +163,7 @@ export default {
   computed: {
     // 当前学历
     currentEducation() {
-      switch(JSON.parse(localStorage.getItem('userinfo')).currentEducation) {
+      switch(this.education) {
         case 4:
           return '博士'
         case 3:
@@ -173,8 +183,63 @@ export default {
         duration: 2000,
       });
     }
+    this.getStuInfo()
   },
   methods: {
+    // 获取关注列表
+    showStarList() {
+      if(this.starsNum === 0) {
+        this.$toast.fail('还没有关注的人~')
+        return false
+      }
+      this.$router.push({
+        name: 'starList',
+        query: {
+          id: this.uId
+        }
+      })
+    },
+    // 获取粉丝列表
+    showFanList() {
+      if(this.fansNum === 0) {
+        this.$toast.fail('还没有人关注~')
+        return false
+      }
+      this.$router.push({
+        name: 'fanList',
+        query: {
+          id: this.uId
+        }
+      })
+    },
+    // 获取发表动态列表
+    showPostList() {
+      if(this.postsNum === 0) {
+        this.$toast.fail('还没有发表动态~')
+        return false
+      }
+      this.$router.push({
+        name: 'postList',
+        query: {
+          id: this.uId
+        }
+      })
+    },
+    // 获取用户信息
+    getStuInfo(){
+      this.$get('/getUserInfo').then(res => {
+        if(res.data.success) {
+          this.starsNum = res.data.studentInfo.starsNum
+          this.fansNum = res.data.studentInfo.fansNum
+          this.postsNum = res.data.studentInfo.postsNum
+          this.uId = res.data.studentInfo.id
+          this.baseInfo.name = res.data.studentInfo.nickName
+          this.currentSchool = res.data.studentInfo.currentSchool
+          this.education = res.data.studentInfo.currentEducation
+          this.status = res.data.studentInfo.status
+        }
+      })
+    },
     // 点击更改密码
     changePwd() {
       this.$router.push({
@@ -224,6 +289,29 @@ export default {
               type: 'success',
               duration: 2000,
             });
+            this.$post("/login").then(res => {
+              if (res.success) {
+                console.log(res)
+                let result = JSON.parse(res.studentInfo)[0].fields
+                console.log(result)
+                localStorage.setItem('currentSite', result.defaultSite)
+                          this.$store.commit('setCurrentSite', result.defaultSite)
+                // this.$store.commit('setSiteList', result.siteList)
+                let siteList = eval(result.siteList).map(item => {
+                  item['text'] = item.siteName
+                  item['value'] = item.id
+                  console.log(item)
+                  return item
+                })
+                localStorage.setItem('siteList', JSON.stringify(siteList))
+                localStorage.setItem('status', result.status)
+                localStorage.setItem('userinfo', JSON.stringify(result))
+                localStorage.setItem('avatar', result.avatar)
+                localStorage.setItem('id', res.user_id)
+                localStorage.setItem('name', result.nickname)
+                localStorage.setItem('email', result.email)
+              }
+            })
           } else {
             this.$toast.fail(res.result)
           }

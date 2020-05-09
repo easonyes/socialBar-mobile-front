@@ -12,6 +12,10 @@ import chat from '@/components/chat'
 import mine from '@/components/mine'
 import infoEdit from '@/components/info'
 import postDetail from '@/components/postDetail'
+import postList from '@/components/postList'
+import starList from '@/components/starList'
+import fanList from '@/components/fanList'
+import otherHome from '@/components/otherHome'
 
 Vue.use(Router)
 
@@ -50,6 +54,26 @@ export default new Router({
       path: '/postDetail',
       name: 'postDetail',
       component: postDetail
+    },
+    {
+      path: '/postList',
+      name: 'postList',
+      component: postList
+    },
+    {
+      path: '/starList',
+      name: 'starList',
+      component: starList
+    },
+    {
+      path: '/fanList',
+      name: 'fanList',
+      component: fanList
+    },
+    {
+      path: '/otherHome',
+      name: 'otherHome',
+      component: otherHome
     },
     {
       path: '/',

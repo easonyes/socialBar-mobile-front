@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Header :title="headerTitle" :leftClick="leftClick" />
+        <Header back :title="headerTitle" :leftClick="leftClick" />
         <div class="contentBox">
             <div v-if="type == 1">
                 <CodeBox @emailBlur="emailBlur" @codeBlur="codeBlur" />

@@ -2,11 +2,11 @@
   <div class="postDetail">
     <Header class="header" back title="详情" :leftClick="leftClick" />
     <div class="contentBox">
-      <postBox v-if="showCard" :commentClick="commentClick" detail :id="postInfo.id" :avatar="postInfo.avatar" :city="postInfo.createPlace" :createTime="postInfo.createTime"
+      <postBox v-if="showCard" :uId="postInfo.userId" :commentClick="commentClick" detail :id="postInfo.id" :avatar="postInfo.avatar" :city="postInfo.createPlace" :createTime="postInfo.createTime"
         :imgs="arr(postInfo.imgs)" :content="postInfo.content" :currentSchool="postInfo.currentSchool"
         :nickName="postInfo.userName" :gender="postInfo.gender" :currentEducation="postInfo.currentEducation"
         :goodNum="postInfo.likes" :commentNum="postInfo.comments" :starNum="postInfo.stars" :shareNum="postInfo.forwards"
-        :stared="postInfo.stared" :liked="postInfo.liked" />
+        :stared="postInfo.stared" :liked="postInfo.liked" :followed="postInfo.followed" />
       <div class="commentBox" @click="commentClick1">
         <div class="commentDiv" v-for="(item, index) in postInfo.pComments" :key="item.id">
           <div class="title">
@@ -66,11 +66,12 @@
     <van-popup
       class="replayPop"
       v-model="replayShow"
+      v-if="postInfo.pComments.length !== 0"
       position="bottom"
       round
       :style="{ height: '90%' }">
       <div class="replayHeader">
-        {{postInfo.pComments[reIndex].nickName}}的回复
+        {{ postInfo.pComments[reIndex].nickName }}的回复
       </div>
       <div class="mainComment">
         <div class="title">
@@ -169,9 +170,13 @@ export default {
       myComment: '',
       // 控制获取数据再显示
       showCard: false,
+      // 回复的评论
+      reIndex: 0,
       // 动态信息
       postInfo: {
-        pComments: [{}]
+        pComments: [{
+          nickName: ''
+        }]
       },
       // 点赞样式
       likeStyle: {},
@@ -193,8 +198,6 @@ export default {
       loading1: false,
       // 回复列表完成
       finished1: false,
-      // 回复的评论
-      reIndex: 0
     }
   },
   created() {
@@ -441,6 +444,9 @@ export default {
       this.$post('/comment', params).then(res => {
         if(res.success) {
           this.getDetail()
+          if (this.replayShow) {
+            this.getReplayList(this.toComment)
+          }
           this.myComment = ""
           this.placeholder = "评论一下"
           this.toStudent = ''

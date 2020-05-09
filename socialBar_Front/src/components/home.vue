@@ -14,7 +14,7 @@
           <van-tabbar-item name="mine" icon="setting-o" :dot="true">我的</van-tabbar-item>
         </van-tabbar>
         <van-popup class="popup" v-model="postShow" position="bottom" :style="{ height: '100%', textAlign: 'left' }" >
-          <Header rIcon :leftClick="leftClick" title="发表你的动态" rText="发布" :rightClick="rightClick"></Header>
+          <Header back rIcon :leftClick="leftClick" title="发表你的动态" rText="发布" :rightClick="rightClick"></Header>
           <div style="padding: 10px;">
             <van-field
               v-model="content"
@@ -96,6 +96,20 @@ export default {
         this.postShow = false
       },
       rightClick() {
+        if(!this.$validate.statusValidate()) {
+          this.$dialog.confirm({
+            title: '发布失败',
+            message: '完成实名认证,解锁更多操作',
+          })
+          .then(() => {
+            this.postShow = false
+            this.tabChange('mine')
+          })
+          .catch(() => {
+            // on cancel
+          });
+          return false
+        }
         if(!this.content && this.fileList.length === 0) {
           this.$toast.fail('请输入动态内容')
           return false

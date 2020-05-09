@@ -61,8 +61,19 @@ const IdCodeValid = (code) => {
   return row;
 }
 
+/**
+ * 实名认证检测 (只是一个偷懒的做法)
+ */
+const statusValidate = () => {
+  if(localStorage.getItem('status') == 2) {
+    return false
+  }
+  return true
+}
+
 
 export default {
   emailVali: emailVali,
-  idCodeValid: IdCodeValid
+  idCodeValid: IdCodeValid,
+  statusValidate,
 }

@@ -6,17 +6,24 @@
         image-fit="cover"
         width="40px"
         height="40px"
+        @click="toHome"
         :src="avatar"
       />
       <div class="info">
-        <div class="firstLine">
-          <div class="nickName">{{nickName}}</div>
-          <div class="gender boy" v-if="gender == 1">♂</div>
-          <div class="gender girl" v-if="gender == 2">♀</div>
-          <div class="edu">{{ education }}</div>
+        <div>
+          <div class="firstLine">
+            <div class="nickName" @click="toHome">{{nickName}}</div>
+            <div class="gender boy" v-if="gender == 1">♂</div>
+            <div class="gender girl" v-if="gender == 2">♀</div>
+            <div class="edu">{{ education }}</div>
+          </div>
+          <div class="secondLine">
+            <div>{{ currentSchool }}</div>
+          </div>
         </div>
-        <div class="secondLine">
-          <div>{{ currentSchool }}</div>
+        <div v-if="detail" class="follow">
+          <van-button v-show="!followStatus" :loading="fLoading" loading-type="spinner" type="info" @click="follow">关注</van-button>
+          <van-button v-show="followStatus" :loading="fLoading" loading-type="spinner" type="default" @click="follow">已关注</van-button>
         </div>
       </div>
     </div>
@@ -70,6 +77,15 @@
 import { ImagePreview } from 'vant';
 export default {
   props: {
+    // 是否关注
+    followed: {
+      type: Boolean,
+      default: false
+    },
+    // 发布用户Id
+    uId: {
+      type: Number,
+    },
     // 动态id
     id: {
       type: Number,
@@ -202,6 +218,8 @@ export default {
   },
   data() {
     return {
+      // 关注加载
+      fLoading:false,
       // 显示内容
       showContent: this.content.replace(/\n/g, "<br/>"),
       // 点赞样式
@@ -222,6 +240,8 @@ export default {
       goodStatus: this.liked,
       // 是否收藏该评论
       starStatus: this.stared,
+      // 是否关注
+      followStatus: this.followed,
       // 分享图标
       options: [
         [
@@ -279,6 +299,29 @@ export default {
     }
   },
   methods: {
+    // 去往某人主页
+    toHome() {
+      this.$router.push({
+        name: 'otherHome',
+        query: {
+          id: this.uId
+        }
+      })
+    },
+    // 点击关注
+    follow() {
+      this.fLoading = true
+      this.$post('/followStu', {
+        id: this.uId,
+        type: this.followStatus ? '2' : '1'
+      }).then(res => {
+        this.$mess(res)
+        this.fLoading = false
+        if (res.success) {
+          this.followStatus = !this.followStatus
+        }
+      })
+    },
     // 动态详情
     postDetail() {
       this.$router.push({
@@ -355,27 +398,38 @@ export default {
     height: 40px;
     display: flex;
     align-items: center;
-    .firstLine {
+    .info {
       display: flex;
-      padding: 0 15px;
-      line-height: 25px;
-      .boy {
-        color: rgb(40, 40, 240);
-        padding-left: 10px;
+      justify-content: space-between;
+      align-items: center;
+      width: calc(90vw - 40px);
+      .firstLine {
+        display: flex;
+        padding: 0 15px;
+        line-height: 25px;
+        .boy {
+          color: rgb(40, 40, 240);
+          padding-left: 10px;
+        }
+        .girl {
+          color: rgb(207, 47, 159);
+          padding-left: 10px;
+        }
+        .edu {
+          padding-left: 10px;
+        }
       }
-      .girl {
-        color: rgb(207, 47, 159);
-        padding-left: 10px;
+      .secondLine {
+        display: flex;
+        padding: 0 15px;
+        font-size: 12px;
+        line-height: 15px;
       }
-      .edu {
-        padding-left: 10px;
+      .follow {
+        /deep/ .van-button {
+          height: 30px;
+        }
       }
-    }
-    .secondLine {
-      display: flex;
-      padding: 0 15px;
-      font-size: 12px;
-      line-height: 15px;
     }
   }
   .mainContent {

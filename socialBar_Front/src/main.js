@@ -11,6 +11,7 @@ import {
   patchUrl
 } from "./api/http"
 import validate from "../src/commonJs/validate.js"
+import common from "../src/commonJs/common.js"
 import Vant from 'vant';
 import 'vant/lib/index.css';
 import Header from './common/Header.vue'
@@ -46,6 +47,7 @@ Vue.prototype.$get = get
 Vue.prototype.$delete = deleteUrl
 Vue.prototype.$patch = patchUrl
 Vue.prototype.$validate = validate
+Vue.prototype.$common = common
 
 Vue.prototype.$mess = function(res) {
   if (res.success) {

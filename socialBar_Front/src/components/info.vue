@@ -1,6 +1,6 @@
 <template>
   <div style="min-height: 100vh; background: rgb(222, 220, 220)">
-    <Header rIcon :leftClick="leftClick" title="账号资料" rText="保存" :rightClick="rightClick"></Header>
+    <Header back rIcon :leftClick="leftClick" title="账号资料" rText="保存" :rightClick="rightClick"></Header>
     <van-cell-group style="margin-top: 20px;">
       <van-field v-model="baseInfo.name" label="用户昵称" readonly @click="beforeNameChange" input-align="right" is-link placeholder="请输入用户名" />
       <van-field v-model="baseInfo.birthday" label="生日" @click="beforeBirChange" input-align="right" is-link placeholder="请选择您的生日" />
