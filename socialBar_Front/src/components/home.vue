@@ -10,7 +10,7 @@
           <van-tabbar-item name="main" icon="home-o">主页</van-tabbar-item>
           <van-tabbar-item name="collection" icon="description">收藏</van-tabbar-item>
           <van-tabbar-item name="post" @click="beforePost" class="upload" icon="plus">发表</van-tabbar-item>
-          <van-tabbar-item name="chat" icon="chat-o" info="5">消息</van-tabbar-item>
+          <van-tabbar-item name="chatList" icon="chat-o" info="5">消息</van-tabbar-item>
           <van-tabbar-item name="mine" icon="setting-o" :dot="true">我的</van-tabbar-item>
         </van-tabbar>
         <van-popup class="popup" v-model="postShow" position="bottom" :style="{ height: '100%', textAlign: 'left' }" >

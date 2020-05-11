@@ -51,6 +51,9 @@
       <van-field v-show="userInfo.status != 2" label="就读学校" readonly :value="userInfo.currentSchool" input-align="right" />
       <van-field v-show="userInfo.status != 2" label="当前学历" readonly :value="currentEducation" input-align="right" />
     </van-cell-group>
+    <div class="chatBtn" @click="toChat">
+      <van-button style="width: 100%" type="info">私 信</van-button>
+    </div>
   </div>
 </template>
 
@@ -90,7 +93,8 @@ export default {
   },
   created() {
     if(this.$route.query.id == localStorage.getItem('id')) {
-      this.$router.push('/mine')
+      this.$router.replace('/mine')
+      this.$store.commit('setBottomTab', 'mine')
     }
   },
   computed: {
@@ -112,6 +116,17 @@ export default {
     this.getStuInfo()
   },
   methods: {
+    // 去聊天
+    toChat() {
+      this.$router.push({
+        name: 'chat',
+        query: {
+          id: this.userInfo.uId,
+          name: this.userInfo.name,
+          avatar: this.userInfo.showImg
+        }
+      })
+    },
     // 点击关注
     follow() {
       this.fLoading = true
@@ -263,6 +278,11 @@ export default {
   }
   .settings {
     margin-top: 30px;
+  }
+  .chatBtn {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
   }
 }
 </style>

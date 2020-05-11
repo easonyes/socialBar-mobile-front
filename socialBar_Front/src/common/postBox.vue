@@ -10,9 +10,9 @@
         :src="avatar"
       />
       <div class="info">
-        <div>
+        <div  @click="toHome">
           <div class="firstLine">
-            <div class="nickName" @click="toHome">{{nickName}}</div>
+            <div class="nickName">{{nickName}}</div>
             <div class="gender boy" v-if="gender == 1">♂</div>
             <div class="gender girl" v-if="gender == 2">♀</div>
             <div class="edu">{{ education }}</div>
@@ -61,7 +61,7 @@
     </div>
     <div class="activeLine">
       <van-icon name="good-job-o" :style="goodStyle" @click="goodClick"><div class="num">{{ goodNum1 == 0 ? '' : this.goodNum1 }}</div></van-icon>
-      <van-icon name="comment-o" @click="commentClick"><div class="num">{{ commentNum1 == 0 ? '' : this.commentNum1 }}</div></van-icon>
+      <van-icon name="comment-o" @click="postDetail"><div class="num">{{ commentNum1 == 0 ? '' : this.commentNum1 }}</div></van-icon>
       <van-icon name="star-o" :style="starStyle" @click="starClick"><div class="num">{{ starNum1 == 0 ? '' : this.starNum1 }}</div></van-icon>
       <van-icon name="more-o" @click="shareClick"><div class="num">{{ shareNum1 == 0 ? '' : this.shareNum1 }}</div></van-icon>
     </div>

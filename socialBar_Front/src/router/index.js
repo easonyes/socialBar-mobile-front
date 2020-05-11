@@ -9,6 +9,7 @@ import home from '@/components/home'
 import main from '@/components/main'
 import collection from '@/components/collection'
 import chat from '@/components/chat'
+import chatList from '@/components/chatList'
 import mine from '@/components/mine'
 import infoEdit from '@/components/info'
 import postDetail from '@/components/postDetail'
@@ -76,6 +77,11 @@ export default new Router({
       component: otherHome
     },
     {
+      path: '/chat',
+      name: 'chat',
+      component: chat
+    },
+    {
       path: '/',
       name: 'home',
       component: home,
@@ -94,9 +100,9 @@ export default new Router({
           component: collection
         },
         {
-          path: '/chat',
-          name: 'chat',
-          component: chat
+          path: '/chatList',
+          name: 'chatList',
+          component: chatList
         },
         {
           path: '/mine',

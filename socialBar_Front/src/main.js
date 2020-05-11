@@ -57,6 +57,11 @@ Vue.prototype.$mess = function(res) {
   }
 }
 
+// router.beforeEach((to, from, next) => {
+//   next(vm => {
+//     if(vm.$post)
+//   })
+// })
 
 /* eslint-disable no-new */
 new Vue({

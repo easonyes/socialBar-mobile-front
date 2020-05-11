@@ -12,7 +12,7 @@
             @load="onLoad0"
           >
             <div v-for="item in postList0" :key="item.id">
-              <postBox :id="item.id" :avatar="item.avatar" :city="item.createPlace" :createTime="item.createTime"
+              <postBox :uId="item.userId" :id="item.id" :avatar="item.avatar" :city="item.createPlace" :createTime="item.createTime"
                 :imgs="arr(item.imgs)" :content="item.content" :currentSchool="item.currentSchool"
                 :nickName="item.userName" :gender="item.gender" :currentEducation="item.currentEducation"
                 :goodNum="item.likes" :commentNum="item.comments" :starNum="item.stars" :shareNum="item.forwards"
@@ -32,7 +32,7 @@
             @load="onLoad1"
           >
             <div v-for="item in postList1" :key="item.id">
-              <postBox :id="item.id" :avatar="item.avatar" :city="item.createPlace" :createTime="item.createTime"
+              <postBox :uId="item.userId" :id="item.id" :avatar="item.avatar" :city="item.createPlace" :createTime="item.createTime"
                 :imgs="arr(item.imgs)" :content="item.content" :currentSchool="item.currentSchool"
                 :nickName="item.userName" :gender="item.gender" :currentEducation="item.currentEducation"
                 :goodNum="item.likes" :commentNum="item.comments" :starNum="item.stars" :shareNum="item.forwards"
@@ -52,7 +52,7 @@
             @load="onLoad2"
           >
             <div v-for="item in postList2" :key="item.id">
-              <postBox :id="item.id" :avatar="item.avatar" :city="item.createPlace" :createTime="item.createTime"
+              <postBox :uId="item.userId" :id="item.id" :avatar="item.avatar" :city="item.createPlace" :createTime="item.createTime"
                 :imgs="arr(item.imgs)" :content="item.content" :currentSchool="item.currentSchool"
                 :nickName="item.userName" :gender="item.gender" :currentEducation="item.currentEducation"
                 :goodNum="item.likes" :commentNum="item.comments" :starNum="item.stars" :shareNum="item.forwards"

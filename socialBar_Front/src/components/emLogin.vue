@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import * as url from '../api/urlConfig'
+import { mapActions } from 'vuex'
 import icon from '../assets/img/icon-demo-1126.png'
 export default {
     data() {
@@ -26,6 +28,11 @@ export default {
             reSec: 60,
             timer: null
         }
+    },
+    computed:{
+      ...mapActions([
+        'actionInitMessagePush'
+      ])
     },
     created() {
       this.$post("/login").then(res => {
@@ -42,6 +49,17 @@ export default {
             console.log(item)
             return item
           })
+          // const ws = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${res.user_id}/`)
+          // //监听后端发送过来的消息
+          // ws.onmessage = function(event){
+          //   const data = JSON.parse(event.data);
+          //   console.log(data)
+          // }
+          // const channel = `${url.messagePush}/${res.user_id}/`
+          // console.log(channel)
+          // this.$store.commit('initMessagePush', channel)
+          // this.$store.commit('messagePushOnMessage')
+          // this.$store('ws://127.0.0.1:8000/push/22/')
           localStorage.setItem('siteList', JSON.stringify(siteList))
           localStorage.setItem('status', result.status)
           localStorage.setItem('userinfo', JSON.stringify(result))

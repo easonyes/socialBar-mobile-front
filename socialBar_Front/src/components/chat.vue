@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <div class="chat">
     <!-- <v-header :headerMsg="headerMsg"></v-header> -->
-    <div class="chat-content">
-      <div v-for="obj in msgRecord">
+    <Header class="header" back :title="chatToUser.name" :leftClick="leftClick" />
+    <div class="chat-content" ref="container">
+      <div v-for="(obj, index) in msgRecord" :key="index">
         <v-my-msg
-          v-if="obj.name == myUserInfo.username"
+          v-if="obj.id == myUserInfo.id"
           :msg="obj.msg"
           :avatar="obj.avatar"
           :mytime="obj.time"></v-my-msg>
@@ -15,18 +16,22 @@
           :mytime="obj.time"></v-other-msg>
       </div>
     </div>
-    <van-field
-    border
-    v-model="input">
-    <template #button>
-      <van-button slot="append" @click="websocketsend()">发送</van-button>
-    </template>
-  </van-field>
+    <div class="bottomLine">
+      <van-field
+        v-model="input"
+        ref="commentInput"
+        left-icon="edit"
+        placeholder="发个消息聊聊呗~">
+        <template #button>
+          <van-button size="small" @click="websocketsend" type="primary">发表</van-button>
+        </template>
+      </van-field>
+    </div>
 </div>
 </template>
 
 <script>
-  // import { mapGetters, mapActions } from 'vuex';
+  import { mapGetters, mapActions } from 'vuex';
   import * as url from '../api/urlConfig'
   import myMsg from '@/common/myMsg'
   import otherMsg from '@/common/otherMsg'
@@ -40,21 +45,25 @@
     },
     data(){
       return{
+        chatToUser: {},
         input:'',
         myUserInfo:{}, //我的个人信息
-        // headerMsg: {
-        //   centerWord: '',
-        //   //这种绑定的图片只能放在static文件夹下
-        //   leftImg: '/static/images/back.png',
-        // },
+        headerMsg: {
+          centerWord: '',
+          //这种绑定的图片只能放在static文件夹下
+          // leftImg: '/static/images/back.png',
+        },
         container: {}, //.chat-content容器
         websock: null,
         msgRecord: [], //消息记录
       }
     },
     created() {
-      // this.myUserInfo = JSON.parse(window.localStorage.getItem('userinfo'))
-      // this.headerMsg.centerWord = this.chatToUser.username
+      this.chatToUser.name = this.$route.query.name
+      this.chatToUser.id = this.$route.query.id
+      this.chatToUser.avatar = this.$route.query.avatar
+      this.myUserInfo = JSON.parse(window.localStorage.getItem('userinfo'))
+      this.myUserInfo.id = parseInt(window.localStorage.getItem('id'))
       this.initWebSocket();
       //获取该聊天组的历史消息
       const hm = JSON.parse(window.localStorage.getItem(this.group_name))
@@ -79,10 +88,9 @@
       }
     },
     computed: {
-      // ...mapGetters([
-      //   'chatToUser', //聊天对象的个人信息
-      //   'group_name',
-      // ]),
+      ...mapGetters([
+        'group_name',
+      ]),
     },
     destroyed() {
       //离开路由之后断开websocket连接
@@ -97,17 +105,25 @@
       // this.container.style.height = `${pageHeight - inputHeight - 50}px`;
       // 自动滚动到底部
       this.$nextTick(() => {
-        this.container.scrollTop = this.container.scrollHeight
+        this.$refs['container'].scrollTop = document.querySelector('.chat-content').scrollHeight
       })
     },
     methods: {
-      // ...mapActions([
-      //   'actionClearGroupName',
-      // ]),
+      // 返回
+      leftClick() {
+        this.websocketclose()
+        window.localStorage.setItem(this.group_name, JSON.stringify(this.msgRecord))
+        this.actionClearGroupName()
+        this.$router.go(-1)
+      },
+      ...mapActions([
+        'actionClearGroupName',
+      ]),
       //初始化weosocket
       initWebSocket(){
+        let group_name = this.myUserInfo.id > this.chatToUser.id ? `${this.chatToUser.id}_${this.myUserInfo.id}` : `${this.myUserInfo.id}_${this.chatToUser.id}`
         //const wsuri = `wss://www.fanfei.site/ws/chat/${this.group_name}/`;
-        const wsuri = `${url.chat}/${10086}/`;
+        const wsuri = `${url.chat}/${group_name}/`;
         //alert(`地址：${wsuri}`)
         this.websock = new WebSocket(wsuri);
         this.websock.onmessage = this.websocketonmessage;
@@ -129,19 +145,20 @@
         const redata = JSON.parse(e.data);
         //let name = ''
         //let avatar = ''
-        if(redata.from_user == this.chatToUser.user_id) {
+        console.log(redata)
+        if(redata.from_user == this.chatToUser.id) {
           //name = this.chatToUser.username
-          //avatar = this.chatToUser.avatar_url
+          //avatar = this.chatToUser.avatar
           //const time = redata.time
           const obj = {
-            name: this.chatToUser.username,
+            name: this.chatToUser.name,
             msg: redata.message,
-            avatar: this.chatToUser.avatar_url,
+            avatar: this.chatToUser.avatar,
             time: redata.time
           }
           this.msgRecord.push(obj)
           this.$nextTick(() => {
-            this.container.scrollTop = this.container.scrollHeight
+            this.$refs['container'].scrollTop = document.querySelector('.chat-content').scrollHeight
           })
         } else if(redata.from_user == this.myUserInfo.id) {
           console.log('消息发送成功')
@@ -152,24 +169,25 @@
       //数据发送
       websocketsend(){
         const time = new Date().Format("yyyy-MM-dd hh:mm:ss")
-        // let obj = {
-        //   from_user: this.myUserInfo.id,
-        //   to_user: this.chatToUser.user_id,
-        //   message: this.input,
-        //   time: time
-        // }
+        let obj = {
+          from_user: this.myUserInfo.id,
+          to_user: parseInt(this.chatToUser.id),
+          message: this.input,
+          time: time
+        }
         //发给后端的数据需要字符串化
-        // this.websock.send(JSON.stringify(obj));
-        this.websock.send(JSON.stringify("1"));
-        // obj = {
-        //   name: this.myUserInfo.username,
-        //   msg: this.input,
-        //   avatar: this.myUserInfo.user_image_url,
-        //   time: time
-        // }
-        // this.msgRecord.push(obj)
+        this.websock.send(JSON.stringify(obj));
+        // this.websock.send(JSON.stringify("1"));
+        obj = {
+          id: this.myUserInfo.id,
+          name: this.myUserInfo.nickname,
+          msg: this.input,
+          avatar: this.myUserInfo.avatar,
+          time: time
+        }
+        this.msgRecord.push(obj)
         this.$nextTick(() => {
-          this.container.scrollTop = this.container.scrollHeight
+           document.querySelector('.chat-content').scrollTop = document.querySelector('.chat-content').scrollHeight
         })
         this.input = ''
       },
@@ -188,14 +206,34 @@
   }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+.chat {
+  .header {
+    position: fixed;
+    z-index: 9;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
   .el-input {
     font-size: 15px;
     z-index: 10;
   }
   .chat-content {
-  width: 100%;
-  overflow: scroll;
-  background: #ffffff;
+    width: 100%;
+    margin-top: 46px;
+    margin-bottom: 51px;
+    overflow: scroll;
+    background: #ffffff;
+  }
+  .bottomLine {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    /deep/ .van-cell {
+      line-height: 30px;
+    }
+  }
 }
 </style>
