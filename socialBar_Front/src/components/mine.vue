@@ -44,6 +44,7 @@
     </div>
     <van-cell-group style="text-align: left">
       <van-field label-align="left" label="更改密码" readonly @click="changePwd" input-align="right" is-link />
+      <van-field label-align="left" label="我的收藏" readonly @click="collection" input-align="right" is-link />
       <!-- <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
       <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" />
       <van-field v-model="name" label="用户昵称" input-align="right" is-link placeholder="请输入用户名" /> -->
@@ -249,6 +250,10 @@ export default {
         }
       })
     },
+    // 进入收藏
+    collection() {
+      this.$router.push('/collection')
+    },
     // 基础信息编辑
     infoEdit() {
       if (this.isVerified == 1) {
@@ -291,25 +296,11 @@ export default {
             });
             this.$post("/login").then(res => {
               if (res.success) {
-                console.log(res)
                 let result = JSON.parse(res.studentInfo)[0].fields
-                console.log(result)
-                localStorage.setItem('currentSite', result.defaultSite)
-                          this.$store.commit('setCurrentSite', result.defaultSite)
-                // this.$store.commit('setSiteList', result.siteList)
-                let siteList = eval(result.siteList).map(item => {
-                  item['text'] = item.siteName
-                  item['value'] = item.id
-                  console.log(item)
-                  return item
-                })
-                localStorage.setItem('siteList', JSON.stringify(siteList))
-                localStorage.setItem('status', result.status)
-                localStorage.setItem('userinfo', JSON.stringify(result))
-                localStorage.setItem('avatar', result.avatar)
+                this.$common.localStore(result)
                 localStorage.setItem('id', res.user_id)
-                localStorage.setItem('name', result.nickname)
-                localStorage.setItem('email', result.email)
+                this.$store.commit('setCurrentSite', result.defaultSite)
+                this.$router.replace("/main")
               }
             })
           } else {

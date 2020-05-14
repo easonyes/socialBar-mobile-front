@@ -39,34 +39,10 @@ export default {
         if (res.success) {
           console.log(res)
           let result = JSON.parse(res.studentInfo)[0].fields
-          console.log(result)
-          localStorage.setItem('currentSite', result.defaultSite)
-                    this.$store.commit('setCurrentSite', result.defaultSite)
-          // this.$store.commit('setSiteList', result.siteList)
-          let siteList = eval(result.siteList).map(item => {
-            item['text'] = item.siteName
-            item['value'] = item.id
-            console.log(item)
-            return item
-          })
-          // const ws = new WebSocket(`ws://127.0.0.1:8000/ws/chat/${res.user_id}/`)
-          // //监听后端发送过来的消息
-          // ws.onmessage = function(event){
-          //   const data = JSON.parse(event.data);
-          //   console.log(data)
-          // }
-          // const channel = `${url.messagePush}/${res.user_id}/`
-          // console.log(channel)
-          // this.$store.commit('initMessagePush', channel)
-          // this.$store.commit('messagePushOnMessage')
-          // this.$store('ws://127.0.0.1:8000/push/22/')
-          localStorage.setItem('siteList', JSON.stringify(siteList))
-          localStorage.setItem('status', result.status)
-          localStorage.setItem('userinfo', JSON.stringify(result))
-          localStorage.setItem('avatar', result.avatar)
+          this.$common.localStore(result)
+          this.$store.commit('setUnReadPost', result.unReadPost)
           localStorage.setItem('id', res.user_id)
-          localStorage.setItem('name', result.nickname)
-          localStorage.setItem('email', result.email)
+          this.$store.commit('setCurrentSite', result.defaultSite)
           this.$router.replace("/main")
         }
       })
@@ -130,24 +106,10 @@ export default {
                 if(res.success) {
                     // 跳转主页
                     let result = JSON.parse(res.studentInfo)[0].fields
-                    console.log(result)
-                    localStorage.setItem('currentSite', result.defaultSite)
-                    localStorage.setItem('currentSite', result.defaultSite)
-                    this.$store.commit('setCurrentSite', result.defaultSite)
-                    // this.$store.commit('setSiteList', result.siteList)
-                    let siteList = eval(result.siteList).map(item => {
-                      item['text'] = item.siteName
-                      item['value'] = item.id
-                      console.log(item)
-                      return item
-                    })
-                    localStorage.setItem('siteList', JSON.stringify(siteList))
-                    localStorage.setItem('userinfo', JSON.stringify(result))
-                    localStorage.setItem('status', result.status)
-                    localStorage.setItem('avatar', result.avatar)
+                    this.$common.localStore(result)
+                    this.$store.commit('setUnReadPost', result.unReadPost)
                     localStorage.setItem('id', res.user_id)
-                    localStorage.setItem('name', result.nickname)
-                    localStorage.setItem('email', result.email)
+                    this.$store.commit('setCurrentSite', result.defaultSite)
                     this.$router.replace("/main")
                 } else {
                     this.$toast.fail(res.result)

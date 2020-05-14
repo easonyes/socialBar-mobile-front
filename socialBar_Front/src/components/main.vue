@@ -140,7 +140,8 @@ export default {
     onLoad1() {
       console.log('还要加载')
       let id = this['postList' + this.active].length === 0 ? '' : this['postList' + this.active][this['postList' + this.active].length-1].id
-      this.init(id)
+      let hotValue = this['postList' + this.active].length === 0 ? '' : this['postList' + this.active][this['postList' + this.active].length-1].hotValue
+      this.init(id, hotValue)
     },
     onLoad2() {
       console.log('还要加载')
@@ -159,10 +160,11 @@ export default {
       }
     },
     // 获取动态列表
-    init(id) {
+    init(id, hotValue) {
       this.$get('postList', {
         type: this.active,
         site: this.currentSite,
+        hotValue: hotValue,
         lastId: id
       }).then(res => {
         if(res.data.success) {

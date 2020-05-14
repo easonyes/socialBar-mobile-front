@@ -40,7 +40,7 @@ Vue.component("CodeBox", CodeBox)
 Vue.component("postBox", postBox)
 
 // 定义全局变量
-Vue.prototype.$vconsole = new vconsole()
+// Vue.prototype.$vconsole = new vconsole()
 Vue.prototype.$post = post
 Vue.prototype.$axios = axios
 Vue.prototype.$get = get

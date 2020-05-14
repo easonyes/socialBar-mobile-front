@@ -25,8 +25,21 @@ export default new Vuex.Store({
     messagePush: null, //消息推送
     group_name: '', //当前聊天组的组名
     unreadMsgLength: 0, //未读消息数量
+    unReadPost: "", // 未读动态
   },
   mutations: {
+    // 设置未读动态的数量
+    setUnReadPost(state, num) {
+      if (num == 0) {
+        state.unReadPost = ""
+      } else {
+        state.unReadPost = num
+      }
+    },
+    // 清空未读动态数量
+    clearUnReadPost(state) {
+      state.unReadPost = ""
+    },
     //减少未读信息的数量
     reduceUnreadMsg(state, num) {
       state.unreadMsgLength-=num

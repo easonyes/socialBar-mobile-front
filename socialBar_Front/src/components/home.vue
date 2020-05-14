@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <Header back search :options="options" />
+        <Header search :options="options" />
         <!-- <keep-alive>
           <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
@@ -8,10 +8,10 @@
         <router-view></router-view>
         <van-tabbar v-model="bottomActive" @change="tabChange">
           <van-tabbar-item name="main" icon="home-o">主页</van-tabbar-item>
-          <van-tabbar-item name="collection" icon="description">收藏</van-tabbar-item>
+          <van-tabbar-item name="followPosts" icon="description" :badge="unReadPost">动态</van-tabbar-item>
           <van-tabbar-item name="post" @click="beforePost" class="upload" icon="plus">发表</van-tabbar-item>
-          <van-tabbar-item name="chatList" icon="chat-o" info="5">消息</van-tabbar-item>
-          <van-tabbar-item name="mine" icon="setting-o" :dot="true">我的</van-tabbar-item>
+          <van-tabbar-item name="chatList" icon="chat-o" >消息</van-tabbar-item>
+          <van-tabbar-item name="mine" icon="setting-o" >我的</van-tabbar-item>
         </van-tabbar>
         <van-popup class="popup" v-model="postShow" position="bottom" :style="{ height: '100%', textAlign: 'left' }" >
           <Header back rIcon :leftClick="leftClick" title="发表你的动态" rText="发布" :rightClick="rightClick"></Header>
@@ -61,7 +61,8 @@ export default {
     },
     computed: {
       ...mapState([
-        'bottomTab'
+        'bottomTab',
+        'unReadPost'
       ])
     },
     // beforeRouteEnter (to, from, next) {

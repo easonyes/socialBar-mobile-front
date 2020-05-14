@@ -78,7 +78,7 @@ export default {
             // 导入的小图标
             nameIcon: icon,
             // 忘记密码或者设置密码，1表示忘记，2表示设置
-            type: 1,
+            type: 2,
             // 旧密码
             oldPwd: "",
             // 新密码
@@ -171,24 +171,10 @@ export default {
                 if (res.success) {
                     this.$toast.success("注册成功！")
                     let result = JSON.parse(res.studentInfo)[0].fields
-                    console.log(result)
-                    localStorage.setItem('currentSite', result.defaultSite)
-                    this.$store.commit('setCurrentSite', result.defaultSite)
-                    // this.$store.commit('setSiteList', result.siteList)
-                    let siteList = eval(result.siteList).map(item => {
-                      item['text'] = item.siteName
-                      item['value'] = item.id
-                      console.log(item)
-                      return item
-                    })
-                    localStorage.setItem('siteList', JSON.stringify(siteList))
-                    localStorage.setItem('status', result.status)
-                    localStorage.setItem('userinfo', JSON.stringify(result))
-                    localStorage.setItem('avatar', result.avatar)
+                    this.$common.localStore(result)
+                    this.$store.commit('setUnReadPost', result.unReadPost)
                     localStorage.setItem('id', res.user_id)
-                    localStorage.setItem('name', result.nickname)
-                    localStorage.setItem('email', result.email)
-                    // 进入主页
+                    this.$store.commit('setCurrentSite', result.defaultSite)
                     this.$router.replace("/main")
                 } else{
                     this.$toast.fail("注册失败，请重试！")

@@ -17,6 +17,7 @@ import postList from '@/components/postList'
 import starList from '@/components/starList'
 import fanList from '@/components/fanList'
 import otherHome from '@/components/otherHome'
+import followPosts from '@/components/followPosts'
 
 Vue.use(Router)
 
@@ -82,6 +83,11 @@ export default new Router({
       component: chat
     },
     {
+      path: '/collection',
+      name: 'collection',
+      component: collection
+    },
+    {
       path: '/',
       name: 'home',
       component: home,
@@ -95,14 +101,14 @@ export default new Router({
           }
         },
         {
-          path: '/collection',
-          name: 'collection',
-          component: collection
-        },
-        {
           path: '/chatList',
           name: 'chatList',
           component: chatList
+        },
+        {
+          path: '/followPosts',
+          name: 'followPosts',
+          component: followPosts
         },
         {
           path: '/mine',

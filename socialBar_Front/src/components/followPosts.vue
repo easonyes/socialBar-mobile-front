@@ -1,6 +1,5 @@
 <template>
   <div class="fanList">
-    <Header class="header" back :leftClick="leftClick" />
     <van-pull-refresh class="coList" v-model="isLoading" @refresh="getPostList">
       <van-list
         class="listBox"
@@ -36,43 +35,46 @@ export default {
       finished: false,
       // 动态列表
       postList: [],
-      sites: []
     }
   },
   mounted() {
     this.getPostList()
   },
+  computed: {
+    sites() {
+      let list = []
+      this.siteList.forEach(item => {
+        list.push(item.id)
+      })
+      return list
+    }
+  },
   methods: {
-    // 返回
-    leftClick() {
-      this.$router.go(-1)
-    },
     arr(list) {
       return eval(list)
     },
     // 下拉加载
     onLoad() {
-      this.getPostList(this.postList[this.postList.length - 1].iId)
+      this.getPostList(this.postList[this.postList.length - 1].id)
     },
     // 获取动态列表
     getPostList(lastId) {
-      this.siteList.forEach(item => {
-        this.sites.push(item.id)
-      })
       console.log(this.sites)
-      this.$get('/getCollectionList', {
-        lastId
+      this.$post('/followPostList', {
+        lastId,
+        siteList: this.sites
       }).then(res => {
-        if(res.data.success) {
+        if(res.success) {
           this.isLoading = false
           this.loading = false
           if(lastId) {
-            this.postList.push.apply(this.postList, res.data.postList)
+            this.postList.push.apply(this.postList, res.postList)
           } else {
-            this.postList = res.data.postList
+            this.$store.commit('clearUnReadPost')
+            this.postList = res.postList
             this.finished = false
           }
-          if(res.data.postList.length < 10) {
+          if(res.postList.length < 10) {
             this.finished = true
           }
         }

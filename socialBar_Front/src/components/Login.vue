@@ -58,23 +58,10 @@ export default {
         }).then(res => {
           if (res.success) {
             let result = JSON.parse(res.studentInfo)[0].fields
-            console.log(result)
-            localStorage.setItem('currentSite', result.defaultSite)
-            this.$store.commit('setCurrentSite', result.defaultSite)
-            // this.$store.commit('setSiteList', result.siteList)
-            let siteList = eval(result.siteList).map(item => {
-              item['text'] = item.siteName
-              item['value'] = item.id
-              console.log(item)
-              return item
-            })
-            localStorage.setItem('siteList', JSON.stringify(siteList))
-            localStorage.setItem('status', result.status)
-            localStorage.setItem('userinfo', JSON.stringify(result))
-            localStorage.setItem('avatar', result.avatar)
+            this.$common.localStore(result)
+            this.$store.commit('setUnReadPost', result.unReadPost)
             localStorage.setItem('id', res.user_id)
-            localStorage.setItem('name', result.nickname)
-            localStorage.setItem('email', result.email)
+            this.$store.commit('setCurrentSite', result.defaultSite)
             this.$router.replace("/main")
           } else {
             this.$toast.fail(res.result)
