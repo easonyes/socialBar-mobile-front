@@ -193,15 +193,12 @@ export default {
 }
 </script>
 
-<style lang="less">
- .van-tabs__content {
-  /deep/
-  .van-tab__pane {
+<style lang="less" scoped>
+/deep/ .van-tab__pane {
     height: calc(100vh - 140px);
     overflow: auto;
   }
-}
-/deep/ .van-pull-refresh__track {
-  height: 400px;
-}
+// /deep/ .van-pull-refresh__track {
+//   height: 400px;
+// }
 </style>

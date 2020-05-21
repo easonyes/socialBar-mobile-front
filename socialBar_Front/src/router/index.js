@@ -18,6 +18,7 @@ import starList from '@/components/starList'
 import fanList from '@/components/fanList'
 import otherHome from '@/components/otherHome'
 import followPosts from '@/components/followPosts'
+import search from '@/components/search'
 
 Vue.use(Router)
 
@@ -86,6 +87,11 @@ export default new Router({
       path: '/collection',
       name: 'collection',
       component: collection
+    },
+    {
+      path: '/search',
+      name: 'search',
+      component: search
     },
     {
       path: '/',

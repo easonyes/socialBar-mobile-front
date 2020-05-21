@@ -9,7 +9,7 @@
         @click-right="rightClick"
       >
         <van-icon v-if="rIcon" :name="rIcon" slot="left" />
-        <van-search v-model="value" placeholder="请输入搜索关键词" v-if="search" slot="title" />
+        <van-search v-model="value" placeholder="请输入搜索关键词" @search="onSearch" v-if="search" slot="title" />
         <van-dropdown-menu v-if="options.length > 0"  slot="right" >
           <van-dropdown-item v-model="rChoose" @change="siteChange" :options="options"/>
         </van-dropdown-menu>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
     props: {
       back: {
@@ -56,6 +57,10 @@ export default {
       search: {
         type: Boolean,
         default: false
+      },
+      sValue: {
+        type: String,
+        default: ""
       }
     },
     data() {
@@ -63,15 +68,28 @@ export default {
         // 当前站点
         rChoose: this.$store.state.currentSite,
         // 搜索值
-        value: ''
+        value: this.searchValue,
+        // 站点列表
+        siteList: JSON.parse(localStorage.getItem('siteList')),
       }
+    },
+    watch: {
+      // sValue(val) {
+      //   this.value = val
+      // },
+      // searchValue(val) {
+      //   this.value = val
+      // }
     },
     mounted() {
     },
+    computed: {
+      ...mapState([
+        'searchValue',
+      ]),
+    },
     methods: {
-      onClickLeft() {
-        this.$router.go(-1)
-      },
+      // 更改站点
       siteChange(val) {
         this.$store.commit('changeCurrentSite', val)
         this.$post('/changeSite', {
@@ -82,14 +100,11 @@ export default {
           }
         })
       },
-      onClickRight() {
-        if (this.rText === "验证码登录") {
-          this.$router.push("/emLogin")
-        }
-        if (this.rText === "密码登录") {
-          this.$router.push("/login")
-        }
-      }
+      // 确定搜索
+      onSearch(val) {
+        this.$emit("onSearch", val)
+        this.value = ""
+      },
     }
 }
 </script>

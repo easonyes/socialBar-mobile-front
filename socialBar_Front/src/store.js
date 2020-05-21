@@ -13,7 +13,7 @@ export default new Vuex.Store({
     // tab选中值
     bottomTab: 'main',
     // 主页上部索引栏
-    topTab: '0',
+    topTab: 1,
     // 首次访问推荐
     firstIn0: true,
     // 首次访问热门
@@ -26,8 +26,13 @@ export default new Vuex.Store({
     group_name: '', //当前聊天组的组名
     unreadMsgLength: 0, //未读消息数量
     unReadPost: "", // 未读动态
+    searchValue: "", // 搜索内容
   },
   mutations: {
+    // 设置搜索内容
+    setSearchValue(state, val) {
+      state.searchValue = val
+    },
     // 设置未读动态的数量
     setUnReadPost(state, num) {
       if (num == 0) {

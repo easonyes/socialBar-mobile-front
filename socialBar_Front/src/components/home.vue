@@ -1,6 +1,6 @@
 <template>
     <div class="main">
-        <Header search :options="options" />
+        <Header search :options="options" @onSearch="onSearch" />
         <!-- <keep-alive>
           <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
@@ -55,6 +55,8 @@ export default {
         LocationCity: '你在哪里?',
         // 是否获取定位
         success: false,
+        // 搜索内容
+        sValue: ""
       }
     },
     watch: {
@@ -63,7 +65,7 @@ export default {
       ...mapState([
         'bottomTab',
         'unReadPost'
-      ])
+      ]),
     },
     // beforeRouteEnter (to, from, next) {
     //   next(vm => {
@@ -77,6 +79,20 @@ export default {
       }
     },
     methods: {
+      // 搜索
+      onSearch(val) {
+        if(!val) {
+          this.$toast.fail("请输入搜索信息")
+          return false
+        }
+        this.$store.commit('setSearchValue', val)
+        this.$router.push({
+          name: 'search',
+          query: {
+            val
+          }
+        })
+      },
       beforePost() {
         this.postShow = true
       },
