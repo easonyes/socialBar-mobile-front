@@ -30,9 +30,6 @@ export default {
         }
     },
     computed:{
-      ...mapActions([
-        'actionInitMessagePush'
-      ])
     },
     created() {
       this.$post("/login").then(res => {
@@ -44,11 +41,18 @@ export default {
           localStorage.setItem('id', res.user_id)
           this.$store.commit('setCurrentSite', result.defaultSite)
           this.$router.replace("/main")
+          const channel = `${url.messagePush}/${res.user_id}/`
+          console.log(typeof channel)
+          // this.$store.dispatch('actionInitMessagePush', {channel})
+          this.actionInitMessagePush({channel})
         }
       })
     },
     mounted() {},
     methods: {
+      ...mapActions([
+        'actionInitMessagePush'
+      ]),
       rightClick() {
         this.$router.push("/login")
       },

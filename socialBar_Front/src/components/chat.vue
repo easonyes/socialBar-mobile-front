@@ -5,7 +5,7 @@
     <div class="chat-content" ref="container">
       <div v-for="(obj, index) in msgRecord" :key="index">
         <v-my-msg
-          v-if="obj.id == myUserInfo.id"
+          v-if="obj.id"
           :msg="obj.msg"
           :avatar="obj.avatar"
           :mytime="obj.time"></v-my-msg>
@@ -154,7 +154,8 @@
             name: this.chatToUser.name,
             msg: redata.message,
             avatar: this.chatToUser.avatar,
-            time: redata.time
+            time: redata.time,
+            id: redata.from_user
           }
           this.msgRecord.push(obj)
           this.$nextTick(() => {
@@ -171,7 +172,7 @@
         const time = new Date().Format("yyyy-MM-dd hh:mm:ss")
         let obj = {
           from_user: this.myUserInfo.id,
-          to_user: parseInt(this.chatToUser.id),
+          to_user: String(this.chatToUser.id),
           message: this.input,
           time: time
         }

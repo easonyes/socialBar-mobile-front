@@ -207,7 +207,7 @@ export default new Vuex.Store({
     },
 
     //初始化消息推送
-    actionInitMessagePush({commit}, channel) {
+    actionInitMessagePush({commit}, {channel}) {
       console.log('channel1', channel)
       commit('initMessagePush', channel)
       commit('messagePushOnMessage')

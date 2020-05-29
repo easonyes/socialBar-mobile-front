@@ -9,7 +9,7 @@
         finished-text="没有更多了"
         @load="onLoad"
       >
-        <div v-for="item in starList" @click="toHome(item.id)" :key="item.id">
+        <div v-for="item in starList" @click="toHome(item.id, item.nickname, item.avatar)" :key="item.id">
           <div class="title">
             <van-image
               round
@@ -55,13 +55,13 @@ export default {
   },
   methods: {
     // 去往某人主页
-    toHome(id) {
+    toHome(id, name, avatar) {
       this.$router.push({
         name: 'chat',
         query: {
-          id: localStorage.getItem('id'),
-          name: localStorage.getItem('name'),
-          avatar: localStorage.getItem('avatar')
+          id,
+          name,
+          avatar
         }
       })
     },

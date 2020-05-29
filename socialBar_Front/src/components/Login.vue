@@ -25,6 +25,8 @@
 
 <script>
 import icon from '../assets/img/icon-demo-1126.png'
+import * as url from '../api/urlConfig'
+import {mapActions} from 'vuex'
 export default {
     data() {
         return {
@@ -36,6 +38,9 @@ export default {
     created() {
     },
     methods: {
+      ...mapActions([
+        'actionInitMessagePush'
+      ]),
       rightClick() {
         this.$router.push("/emLogin")
       },
@@ -63,6 +68,10 @@ export default {
             localStorage.setItem('id', res.user_id)
             this.$store.commit('setCurrentSite', result.defaultSite)
             this.$router.replace("/main")
+            const channel = `${url.messagePush}/${res.user_id}/`
+            console.log(channel)
+            // this.$store.dispatch('actionInitMessagePush', {channel})
+            this.actionInitMessagePush({channel})
           } else {
             this.$toast.fail(res.result)
           }

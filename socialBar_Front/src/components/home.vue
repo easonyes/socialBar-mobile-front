@@ -10,7 +10,7 @@
           <van-tabbar-item name="main" icon="home-o">主页</van-tabbar-item>
           <van-tabbar-item name="followPosts" icon="description" :badge="unReadPost">动态</van-tabbar-item>
           <van-tabbar-item name="post" @click="beforePost" class="upload" icon="plus">发表</van-tabbar-item>
-          <van-tabbar-item name="chatList" icon="chat-o" >消息</van-tabbar-item>
+          <van-tabbar-item name="chatList" icon="chat-o" :badge="unreadMsgLength ? unreadMsgLength : ''">消息</van-tabbar-item>
           <van-tabbar-item name="mine" icon="setting-o" >我的</van-tabbar-item>
         </van-tabbar>
         <van-popup class="popup" v-model="postShow" position="bottom" :style="{ height: '100%', textAlign: 'left' }" >
@@ -64,7 +64,8 @@ export default {
     computed: {
       ...mapState([
         'bottomTab',
-        'unReadPost'
+        'unreadMsgLength',
+        'unReadPost',
       ]),
     },
     // beforeRouteEnter (to, from, next) {
