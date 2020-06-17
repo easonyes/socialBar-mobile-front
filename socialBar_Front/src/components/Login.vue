@@ -13,6 +13,7 @@
             v-model="password"
             left-icon="idcard"
             placeholder="请输入密码"
+            type="password"
         />
         <van-button class="loginBtn" @click="login" type="primary">登&nbsp;&nbsp;录</van-button>
     </div>
